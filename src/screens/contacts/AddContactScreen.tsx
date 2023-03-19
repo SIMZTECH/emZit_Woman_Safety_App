@@ -15,6 +15,7 @@ const AddContactScreen = () => {
     const[phoneNumber,setPhoneNumber]=useState<string>('');
     const[relativeName,setRelativeName]=useState<string>('');
     const [selectedLevel, setSelectedLevel] = useState<Boolean>(true);
+    const [nameTitle, setNameTitle] = useState<string>('mother');
     
     const Navigation=useNavigation();
     useLayoutEffect(()=>{
@@ -60,11 +61,32 @@ const AddContactScreen = () => {
                 setValue={setRelativeName}            
             />
 
+            <View className='border-[0.5px] rounded-md border-[#f00100] mt-2 mb-2 flex-row items-center justify-between pl-3 bg-white shadow-md'>
+                <Text className='font-medium text-[16px]'>Name title</Text>
+                <Picker
+                    style={{
+                        width:'50%', 
+                    }}
+                    selectedValue={nameTitle}
+                    onValueChange={(itemValue, itemIndex) =>
+                        setNameTitle(itemValue)
+                    }>
+                    <Picker.Item label="Mother" value={'mother'} />
+                    <Picker.Item label="Father" value={'father'} />
+                    <Picker.Item label="Brother" value={'brother'} />
+                    <Picker.Item label="Sister" value={'Sister'} />
+                    <Picker.Item label="Uncle" value={'uncle'} />
+                    <Picker.Item label="Auntie" value={'Aintie'} />
+                    <Picker.Item label="Friend" value={'friend'} />
+                    <Picker.Item label="Other" value={'other'} />
+                </Picker>
+            </View>
+
             <View className='b border-[0.5px] rounded-md border-[#f00100] mt-2 flex-row items-center justify-between pl-3 bg-white shadow-md'>
                 <Text className='b font-medium text-[16px]'>Priority</Text>
                 <Picker
                     style={{
-                        width:'40%', 
+                        width:'50%', 
                     }}
                     selectedValue={selectedLevel}
                     onValueChange={(itemValue, itemIndex) =>
