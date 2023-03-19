@@ -24,7 +24,8 @@ const Contacts = () => {
   },);
   /* Events methods*/
   const onPressedAddContact=()=>{
-    Alert.alert('Contact added');
+    // Alert.alert('Contact added');
+    Navigation.navigate('Add Contact');
   }
   /* */
 

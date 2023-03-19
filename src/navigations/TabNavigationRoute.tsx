@@ -1,12 +1,13 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable prettier/prettier */
 /* eslint-disable semi */
 import { StyleSheet} from 'react-native';
 import React from 'react';
 import Home from '../screens/home/Home';
 import Profile from '../screens/profile/Profile';
-import Contacts from '../screens/contacts/Contacts';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ContactStack from './ContactStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +33,7 @@ const TabNavigationRoute = ({navigation}) => {
       })}
       >
             <Tab.Screen name='Home' component={Home}/>
-            <Tab.Screen name='Contacts' component={Contacts}/>
+            <Tab.Screen name='Contacts' component={ContactStack}/>
             <Tab.Screen name='Profile' component={Profile}/>
         </Tab.Navigator>
     </>

@@ -11,15 +11,19 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.11",
+   
+    "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/material-bottom-tabs": "^6.2.15",
     "@react-navigation/native": "^6.1.6",
+    "@react-navigation/stack": "^6.3.16",
     "@shopify/react-native-skia": "^0.1.176",
     "react": "18.2.0",
     "react-native": "0.71.4",
     "react-native-base64": "^0.2.1",
     "react-native-ble-plx": "^2.0.3",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-modal": "^13.0.1",
@@ -55,3 +59,7 @@
     "preset": "react-native"
   }
 }
+
+
+
+
