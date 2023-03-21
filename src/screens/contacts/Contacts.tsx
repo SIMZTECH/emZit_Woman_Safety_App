@@ -1,17 +1,22 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { StyleSheet, Text, View,Dimensions,TouchableOpacity,Alert, ScrollView} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ContactRow from '../../components/ContactRow';
+import { saveToDatabse,deleteItemFromDatabase,GetFromDatabse} from '../../database/SQLite_DB';
+import { ContactsModel } from '../../database/Model';
+import { openDatabase } from 'react-native-sqlite-storage';
+import { woman,sister,brother,auntie,friend,other,man, uncle} from '../../../assets/imgaes/UIDesign/OtherImages';
 
-
-const avatorMale='https://cdn-icons-png.flaticon.com/512/4140/4140048.png';
-const avatorFemale='https://cdn-icons-png.flaticon.com/512/9561/9561553.png';
-const avatorSibling='https://cdn-icons-png.flaticon.com/512/706/706807.png';
+const db=openDatabase({ name:'emergencyApp', location: 'default' });
 
 const Contacts = () => {
+  const [contactsRetrievedDB,setContactsRetrievedDB]=useState([]);
+  
   const Navigation=useNavigation();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {width,height}=Dimensions.get('screen');
@@ -22,12 +27,77 @@ const Contacts = () => {
     })
     
   },);
+
+  // handle format icons
+  const formatIcon=(name:string)=>{
+    let icon;
+
+    switch (name) {
+      case 'Mother':
+        icon=woman;
+        break;
+      
+      case 'Father':
+        icon=man;
+
+        break;
+
+      case 'Sister':
+        icon=sister;
+
+        break;
+
+      case 'Uncle':
+        icon=uncle;
+
+        break;
+
+      case 'Auntie':
+        icon=auntie;
+
+        break;
+
+      case 'Friend':
+        icon=friend;
+
+        break;
+
+      case 'Other':
+        icon=other;
+
+        break;
+
+      case 'Brother':
+        icon=brother;
+        break;
+    
+      default:
+        icon=other;
+        break;
+    }
+    return icon;
+  };
+
+  const HandleRetrieveData=async()=>{
+    // retrieve from db
+    await GetFromDatabse('contacts','',await db)
+    .then((res)=>{
+      // console.log(res);
+      setContactsRetrievedDB(res);
+    });
+  };
+
+  useEffect(()=>{
+    HandleRetrieveData();
+
+  },[contactsRetrievedDB]);
+
+  // HandleRetrieveData();
+
   /* Events methods*/
-  const onPressedAddContact=()=>{
-    // Alert.alert('Contact added');
-    Navigation.navigate('Add Contact');
-  }
-  /* */
+  const onPressedAddContact=async()=>{
+    Navigation.navigate('AddContact');
+  };
 
   return (
     <SafeAreaView
@@ -52,37 +122,14 @@ const Contacts = () => {
       showsVerticalScrollIndicator={false}
       >
         {/* components */}
-        <ContactRow 
-          urlImage={avatorFemale}
-          phone={'0969718806'}
-          name={'Sister'}
-          priority={'High Priority'}
-        />
-        <ContactRow 
-          urlImage={avatorSibling}
-          phone={'0969718806'}
-          name={'Bro'}
-          priority={'High Priority'}
-        />
-       
-        <ContactRow 
-          urlImage={avatorMale}
-          phone={'0969718806'}
-          name={'Favour'}
-          priority={'Low Priority'}
-        />
-         <ContactRow 
-          urlImage={avatorFemale}
-          phone={'0969718806'}
-          name={'Xavier'}
-          priority={'Low Priority'}
-        />
-        <ContactRow 
-          urlImage={avatorMale}
-          phone={'0969718806'}
-          name={'Samson'}
-          priority={'Low Priority'}
-        />
+        {contactsRetrievedDB.map((item,index)=>{
+            return ( 
+              <ContactRow 
+              data={item} key={item.contactID} 
+              icon={formatIcon(item.nameTitle)} />  
+            );
+          })
+        }
 
       </ScrollView>
     </SafeAreaView>

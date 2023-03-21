@@ -8,6 +8,7 @@ import Profile from '../screens/profile/Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ContactStack from './ContactStack';
+import HomeStack from './HomeStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +33,7 @@ const TabNavigationRoute = ({navigation}) => {
         tabBarInactiveTintColor: 'gray',
       })}
       >
-            <Tab.Screen name='Home' component={Home}/>
+            <Tab.Screen name='Home' component={HomeStack}/>
             <Tab.Screen name='Contacts' component={ContactStack}/>
             <Tab.Screen name='Profile' component={Profile}/>
         </Tab.Navigator>

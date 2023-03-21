@@ -1,11 +1,13 @@
+/* eslint-disable jsx-quotes */
+/* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect, useState } from 'react';
 import {
-    Alert, Dimensions, Image, LogBox, Pressable, SafeAreaView, StyleSheet,
-    Text, View,TouchableOpacity
+  Alert, Dimensions, Image, LogBox, Pressable, SafeAreaView, StyleSheet,
+  Text, TouchableOpacity, View
 } from 'react-native';
 import base64 from 'react-native-base64';
 import { BleError, BleManager, Characteristic, Device } from 'react-native-ble-plx';
@@ -13,8 +15,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import UUID from '../../../assets/constants/UUID';
+import { friend, imageMap } from '../../../assets/imgaes/UIDesign/OtherImages';
 import useBLE from '../../useBLe';
-import { imageMap } from '../../../assets/imgaes/UIDesign/OtherImages';
 import ModalScreen from './ModalScreen';
 
   const {BOX_CHARACTERISTIC_UUID,DATA_CHARACTERISTIC_UUID,SERVICE_UUID} = UUID;
@@ -139,7 +141,6 @@ import ModalScreen from './ModalScreen';
       <SafeAreaView
       className=" bg-[#eff2fa] relative flex-1"
       style={[styles.SafeAreaViewContainer,{width:width,height:height}]}>
-        {/* top section */}
         <View
           className="px-8 pt-5 pb-1 flex-row justify-between bg-white rounded-bl-[20px] rounded-br-[20px]">
            <TouchableOpacity onPress={()=>navigation.toggleDrawer()}>
@@ -150,15 +151,15 @@ import ModalScreen from './ModalScreen';
             <AntDesign name="heart" size={17} color="#f00100"/>
             <Text className="text-[20px] text-[#c3c6d3]">Emergency<Text className="text-[#f00100] font-bold">App</Text></Text>
           </View>
+
           <View className="w-10 h-10 bg-blue-400 border-[2px] border-[#f00100] rounded-full overflow-hidden">
             <Image
-              source={{uri:'https://cdn-icons-png.flaticon.com/512/219/219969.png'}}
+              source={friend}
               className="object-contain h-full w-full"
             />
           </View>
         </View>
 
-        {/* midle section */}
         <View className="items-center pt-12">
           <Text
             className="text-[32px] text-black font-semibold text-center w-[80%]"
@@ -175,7 +176,6 @@ import ModalScreen from './ModalScreen';
           <Text className="b text-[14px] text-[#b4b7c2] mt-2">Read the guide</Text>
         </View>
 
-        {/* menu selection */}
         <View className='px-2 flex-row justify-between mt-10'
         style={[styles.cardMenuContainer,{width:width}]}>
           {/* connect to BLE*/}
@@ -205,7 +205,9 @@ import ModalScreen from './ModalScreen';
           </Pressable>
 
           {/* card 3 */}
-          <Pressable className='w-[32%] bg-white p-2 pt-3 rounded-md space-y-2 shadow-md h-31'>
+          <Pressable 
+            onPress={()=>navigation.navigate("Map")}
+            className='w-[32%] bg-white p-2 pt-3 rounded-md space-y-2 shadow-md h-31'>
             <View className='items-center'>
               <Text className='text-[17px] text-[#b4b7c2] '>Map</Text>
             </View>
@@ -222,7 +224,7 @@ import ModalScreen from './ModalScreen';
         <View>
           <ModalScreen 
             value={isModalVisible} 
-            setValue={setIsModalVisible}          
+            setValue={setIsModalVisible}
           />
 
         </View>

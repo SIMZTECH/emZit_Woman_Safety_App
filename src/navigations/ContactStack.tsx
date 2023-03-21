@@ -20,7 +20,7 @@ const ContactStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name='Contact' component={Contacts}/>
-      <Stack.Screen name='Add Contact' component={AddContactScreen}/>
+      <Stack.Screen name='AddContact' component={AddContactScreen}/>
     </Stack.Navigator>
   );
 };

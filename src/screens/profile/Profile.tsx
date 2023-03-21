@@ -11,6 +11,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProfileDataRow from './ProfileDataRow';
 import AlergiesRow from './AlergiesRow';
+import {friend} from '../../../assets/imgaes/UIDesign/OtherImages';
 
 
 const Profile = () => {
@@ -66,15 +67,15 @@ const Profile = () => {
               <Text className="text-[#c3c6d3]">60%</Text>
             </View>
           </View>
-          <View className="items-center flex-1">
+          <View className="items-center flex-1 ">
             {/* profile pic */}
-            <View className="w-[70px] h-[70px] bg-slate-400 rounded-md">
-              <Image source={{uri:'https://www.transparentpng.com/thumb/user/female-user-transparent-icon--dOtdVA.png'}}
+            <View className="w-[70px] h-[70px] bg-slate-400 rounded-full -ml-6">
+              <Image source={friend}
               className="w-full h-full"
               resizeMode="contain"/>
             </View>
-            <Text className="text-[24px] text-black font-medium mt-2">Samson Mumba</Text>
-            <Text className="text-[14px] text-[#c3c6d3]">14 January, 1998</Text>
+            <Text className="text-[24px] text-black font-medium mt-2 -ml-6">Samson Mumba</Text>
+            <Text className="text-[14px] text-[#c3c6d3] -ml-6">14 January, 1998</Text>
           </View>
           <View className="flex-row space-x-1">
             <Text className="text-[#f00100] font-medium">Edit</Text>
