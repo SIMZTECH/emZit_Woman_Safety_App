@@ -3,12 +3,12 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line eslint-comments/no-unused-disable
 // eslint-disable-next-line prettier/prettier
-import 'react-native-gesture-handler';
-import { StyleSheet} from 'react-native';
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import 'react-native-gesture-handler';
+import { creatTable } from './src/database/SQLite_DB';
 import DrawerNavigation from './src/navigations/DrawerNavigation';
-import { creatTable,dropTable } from './src/database/SQLite_DB';
+import { GlobalStateProvider,AppContext } from './global/GlobalState';
 
 const App = () => {
 
@@ -18,12 +18,13 @@ const App = () => {
   })
 
   return (
-    <NavigationContainer>
-      <DrawerNavigation />
-    </NavigationContainer>
-  )
+    <GlobalStateProvider>
+       <NavigationContainer>
+          <DrawerNavigation />
+      </NavigationContainer>
+    </GlobalStateProvider>
+      
+  );
 };
 
 export default App;
-
-const styles = StyleSheet.create({});

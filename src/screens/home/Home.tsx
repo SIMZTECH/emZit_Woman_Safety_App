@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { useNavigation } from '@react-navigation/native';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useContext, useLayoutEffect, useState } from 'react';
 import {
   Alert, Dimensions, Image, LogBox, Pressable, SafeAreaView, StyleSheet,
   Text, TouchableOpacity, View
@@ -17,7 +17,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import UUID from '../../../assets/constants/UUID';
 import { friend, imageMap } from '../../../assets/imgaes/UIDesign/OtherImages';
 import useBLE from '../../useBLe';
-import ModalScreen from './ModalScreen';
+import { AppContext } from '../../../global/GlobalState';
 
   const {BOX_CHARACTERISTIC_UUID,DATA_CHARACTERISTIC_UUID,SERVICE_UUID} = UUID;
   const bleManager = new BleManager();
@@ -37,7 +37,8 @@ import ModalScreen from './ModalScreen';
     const [allDevices,setAllDevices] = useState<Device[]>([]);
     const [messageData,setMessageData] = useState('Low');
     const [boxValue,setBoxValue] = useState<Boolean>(false);
-    const [isModalVisible, setIsModalVisible] = useState<Boolean>(false);
+    // get global state data
+    const{isDeviceConnected,setIsDeviceConnected}=useContext(AppContext);
 
     const Navigation=useNavigation();
 
@@ -121,18 +122,20 @@ import ModalScreen from './ModalScreen';
 
     /*my initiative code added**/
 
-    const openModal = async()=>{
-      requestPermissions((isGranted:boolean)=>{
-        Alert.alert('Android Permission is granted?' + isGranted);
-        if (isGranted){
-          scanForDevices();
-        }
-      });
-    };
+    // const openModal = async()=>{
+    //   requestPermissions((isGranted:boolean)=>{
+    //     Alert.alert('Android Permission is granted?' + isGranted);
+    //     if (isGranted){
+    //       scanForDevices();
+    //     }
+    //   });
+    // };
 
     /* new code*/
     const handleOnPressConnect=()=>{
-      setIsModalVisible(!isModalVisible);
+      // setIsModalVisible(!isModalVisible);
+      navigation.navigate('BlueToothScreen');
+
     }
      
     /* new code*/
@@ -168,7 +171,7 @@ import ModalScreen from './ModalScreen';
           </Text>
           <Text className="b text-[14px] text-[#b4b7c2] mt-2">just press on the button to call</Text>
           <View
-            className="w-[170px] h-[170px] bg-[#f00100] rounded-full border-[6px] border-[#b4b7c2] mt-6 mb-10 items-center justify-center"
+            className={`w-[170px] h-[170px] bg-[#f00100] rounded-full border-[6px] ${isDeviceConnected?'border-[#0a883f]':'border-[#b4b7c2]'} mt-6 mb-10 items-center justify-center`}
           >
               <MaterialCommunityIcons name="access-point" size={54} color="white"/>
           </View>
@@ -196,11 +199,19 @@ import ModalScreen from './ModalScreen';
           <Pressable className='w-[32%] bg-white p-2 pt-3 rounded-md space-y-2 shadow-md h-31'>
             <View className='b items-center'>
               <Text className='text-[16px] text-[#b4b7c2] '>Status</Text>
-              <Text className='text-[#b4b7c2] text-[18px]'>Connected</Text>
+              <Text className='text-[#b4b7c2] text-[15px] '>
+                {isDeviceConnected?'Connected':'Disconnected'}
+              </Text>
             </View>
             <View className='flex-row justify-between'> 
               <MaterialCommunityIcons name='arrow-right-thin' color={'#f00100'} size={24}/>
-              <MaterialCommunityIcons name='access-point-network' color={'#b4b7c2'} size={24}/>
+              {isDeviceConnected?(
+                  <MaterialCommunityIcons name='access-point-network' color={'#b4b7c2'} size={24}/>
+                  ):(
+                    <MaterialCommunityIcons name='access-point-network-off' color={'#b4b7c2'} size={24}/>
+                  )
+              }
+
             </View>
           </Pressable>
 
@@ -217,15 +228,6 @@ import ModalScreen from './ModalScreen';
               resizeMode='contain'/>
             </View>
           </Pressable>
-
-        </View>
-
-        {/* Modal */}
-        <View>
-          <ModalScreen 
-            value={isModalVisible} 
-            setValue={setIsModalVisible}
-          />
 
         </View>
 
