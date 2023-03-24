@@ -47,11 +47,12 @@ const BlueToothScreen = () => {
 
   return (
       <SafeAreaView className='b bg-[#eff2fa] flex-1'>
-          <View className='b px-3 pt-3 pb-2 flex-row space-x-2 items-center border-b-[0.5px] border-[#c3c6d3]'>
+          <View className='b px-3 pt-3 pb-2 flex-row space-x-8 items-center border-b-[0.5px] border-[#c3c6d3]'>
               <TouchableOpacity
                   onPress={() => Navigation.goBack()}
-                  className='w-8'>
+                  className='flex-row items-center'>
                   <Entypo name='chevron-thin-left' size={25} color={'#f00100'} />
+                  <Text className='text-[17px] text-[#f00100] font-medium'>Back</Text>
               </TouchableOpacity>
               <Text className='text-[20px] font-medium text-black'>Bluetooth</Text>
           </View>

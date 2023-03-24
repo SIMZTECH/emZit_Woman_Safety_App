@@ -8,6 +8,7 @@ import { createDrawerNavigator,
     DrawerItemList,
     DrawerItem,} from '@react-navigation/drawer';
 import TabNavigationRoute from './TabNavigationRoute';
+import HomeStack from './HomeStack';
 
 
 const Drawer = createDrawerNavigator();
@@ -53,7 +54,7 @@ const DrawerNavigation = () => {
               },
          }}
         >
-        <Drawer.Screen  name="Dashboard" component={TabNavigationRoute}/> 
+        <Drawer.Screen  name="Dashboard" component={HomeStack}/> 
         {/* route to tab navigation */}
         </Drawer.Navigator>
     </>

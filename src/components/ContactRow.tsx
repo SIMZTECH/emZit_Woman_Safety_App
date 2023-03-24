@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { StyleSheet, Text, View,Image, TouchableOpacity, Alert} from 'react-native';
+import { StyleSheet, Text, View,Image, TouchableOpacity, Alert, ToastAndroid} from 'react-native';
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -13,7 +13,17 @@ const ContactRow = ({data,icon}) => {
     };
 
     const onPressedDeletContact = ()=>{
-      deleteItemFromDatabase('contacts',data.contactID,'');
+      Alert.alert(
+        'Warning!',
+        `Are you sure, you want to delete +26 ${data.phoneNumber}`,
+        [
+          {text:'Yes', onPress:(()=>{
+            deleteItemFromDatabase('contacts',data.contactID,'');
+            ToastAndroid.show(`Contact deleted successfully +26 ${data.phoneNumber}`,ToastAndroid.SHORT);
+          })},
+          {text:'No', onPress:(()=>{return}) }
+        ]
+      );
     };
 
     const formatPriorityToString=()=>{

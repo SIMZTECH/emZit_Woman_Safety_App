@@ -1,19 +1,31 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable prettier/prettier */
 /* eslint-disable semi */
-import { StyleSheet} from 'react-native';
-import React from 'react';
-import Home from '../screens/home/Home';
+import React, { useLayoutEffect } from 'react';
 import Profile from '../screens/profile/Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import ContactStack from './ContactStack';
-import HomeStack from './HomeStack';
+import SettingsScreen from '../screens/settings/SettingsScreen';
+import Contacts from '../screens/contacts/Contacts';
+import Home from '../screens/home/Home';
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 
 const TabNavigationRoute = ({navigation}) => {
+
+  const Navigation=useNavigation();
+  
+  useLayoutEffect(() => {
+    Navigation.setOptions({
+      headerShown:false,
+    })
+    
+  },);
+
+
   return (
     <>
         <Tab.Navigator
@@ -26,6 +38,8 @@ const TabNavigationRoute = ({navigation}) => {
             iconName=focused?'call':'call';
           }else if(route.name==='Profile'){
             iconName=focused?'ios-person-circle-sharp' : 'ios-person-circle-sharp';
+          }else if(route.name==='Settings'){
+            iconName=focused?'md-settings' : 'md-settings';
           }
           return <Ionicons name={`${iconName}`} size={size} color={color}/>
         },
@@ -33,15 +47,13 @@ const TabNavigationRoute = ({navigation}) => {
         tabBarInactiveTintColor: 'gray',
       })}
       >
-            <Tab.Screen name='Home' component={HomeStack}/>
-            <Tab.Screen name='Contacts' component={ContactStack}/>
+            <Tab.Screen name='Home' component={Home}/>
+            <Tab.Screen name='Contacts' component={Contacts}/>
             <Tab.Screen name='Profile' component={Profile}/>
+            <Tab.Screen name='Settings' component={SettingsScreen}/>
         </Tab.Navigator>
     </>
   )
 }
 
 export default TabNavigationRoute;
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const styles = StyleSheet.create({})

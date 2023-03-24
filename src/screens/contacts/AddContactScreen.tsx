@@ -5,7 +5,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import { StyleSheet, Text, View,SafeAreaView,TouchableOpacity, Alert} from 'react-native';
+import { StyleSheet, Text, View,SafeAreaView,TouchableOpacity, Alert, ToastAndroid} from 'react-native';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -40,16 +40,17 @@ const AddContactScreen = () => {
 
     const onPressSave=async()=>{
         if(phoneNumber==''){
-            Alert.alert('Enter all fields');
+            Alert.alert('Invalid Input!','Phone number field cannot be empty');
             return;
-        };
-
-        // save data
-        saveToDatabse('contacts',AllUserData,'');
-
-        Alert.alert('Saved');  
-           
-        Navigation.goBack(); 
+        }else if(phoneNumber.length>10 || phoneNumber.length<10){
+            Alert.alert('Invalid Input!', 'Phone number must have 10 numerical characters');
+        }else{
+            // save data
+            saveToDatabse('contacts',AllUserData,'');
+            ToastAndroid.show(`Contact added successfully +26 ${phoneNumber}`,ToastAndroid.SHORT);
+            Navigation.goBack();
+        }
+ 
     };
  
 
@@ -66,9 +67,10 @@ const AddContactScreen = () => {
         </View>
         <View className='b '>
             <InputContainer 
-                placeholder={'Enter phone Number eg 077,096,097'} 
-                value={phoneNumber} 
-                setValue={setPhoneNumber}            
+                  placeholder={'Enter phone Number eg 077,096,097'}
+                  value={phoneNumber}
+                  setValue={setPhoneNumber} 
+                  keyboardType={'numeric'}            
             />
 
             <View className='border-[0.5px] rounded-md border-[#f00100] mt-2 mb-2 flex-row items-center justify-between pl-3 bg-white shadow-md'>

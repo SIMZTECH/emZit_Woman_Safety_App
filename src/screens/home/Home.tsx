@@ -187,7 +187,7 @@ import { AppContext } from '../../../global/GlobalState';
             className='w-[32%] bg-white p-2 pt-3 rounded-md space-y-2 shadow-md h-31'
           >
             <View className='b items-center'>
-              <Text className='text-[16px] text-[#b4b7c2] '>Connect to </Text>
+              <Text className='text-[15px] text-[#b4b7c2] '>{isDeviceConnected?'Disconnect':'Connect'} to </Text>
               <Text className='text-[#b4b7c2] text-[18px]'>BLE</Text>
             </View>
             <View className='flex-row justify-between'> 
