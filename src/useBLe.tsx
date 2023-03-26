@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Platform, PermissionsAndroid} from 'react-native';
+import { Platform, PermissionsAndroid, Alert} from 'react-native';
 import { BleError, BleManager, Characteristic, Device } from 'react-native-ble-plx';
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import { atob } from 'react-native-quick-base64';
+import base64 from 'react-native-base64';
+import { AppContext } from '../global/GlobalState';
 
 const SERVICE_UUID="8ccbd4e6-bd76-11ed-afa1-0242ac120002";
 const DATA_CHARACTERISTIC_UUID="9d99dafc-bd76-11ed-afa1-0242ac120002";
@@ -18,17 +20,23 @@ interface BluetoothLowEnergyApi{
     requestPermissions(callback:PermissionCallback):Promise<void>;
     connectToDevice(device:Device):Promise<void>;
     scanForDevices():void;
-    // allDevices:Device[];
+    allDevices:Device[];
+    message:string;
 }
 
 // const [allDevices,setAllDevices] = useState<Device[]>([]);
 
 export default function useBLE():BluetoothLowEnergyApi{
-    // const [allDevices,setAllDevices] = useState<Device[]>([]);
-    // const[connectedDevice,setConnectedDevice]=useState<Device|null>(null);
-    // const[streamedData,setStreamedData]=useState<number>(0);
+    const [allDevices,setAllDevices] = useState<Device[]>([]);
+    // const[connectedDevice,setConnectedDevice]=useState<Device[]>([]);
+    const[streamedData,setStreamedData]=useState<number>(0);
+    const[message,setMessage]=useState<string>('nothing yet');
 
-
+    const{
+        connectedDevice,setConnectedDevice,
+        isDeviceConnected,setIsDeviceConnected,
+        messageData,setMessageData,
+    }=useContext(AppContext);
 
     // request permissions method
     const requestPermissions = async(callback:PermissionCallback)=>{
@@ -60,16 +68,15 @@ export default function useBLE():BluetoothLowEnergyApi{
             if(error){
                 console.log(error);
             }
-
             if(device && device.name?.includes('ESP32-R')){
-                console.log(Device.name)
-                // setAllDevices(
-                //     (prevState)=>{
-                //     if (!isDuplicateDevice(prevState,device)){
-                //         return [...prevState,device];
-                //     }
-                //     return prevState;
-                // })
+                // console.log(device.name)
+                setAllDevices(
+                    (prevState)=>{
+                    if (!isDuplicateDevice(prevState,device)){
+                        return [...prevState,device];
+                    }
+                    return prevState;
+                })
             }
         })
     };
@@ -78,14 +85,23 @@ export default function useBLE():BluetoothLowEnergyApi{
     const connectToDevice=async(device:Device)=>{
         try {
             const deviceConnection=await bleManager.connectToDevice(device.id);
-            // setConnectedDevice(deviceConnection);
+            
+            setConnectedDevice(deviceConnection);
+            setIsDeviceConnected(true)//set connection status to true
+
+            console.log(deviceConnection);
+
+
             bleManager.stopDeviceScan();
+
             await deviceConnection.discoverAllServicesAndCharacteristics();
+
             startStreamingData(device);
+
         } catch (error) {
             console.log('ERROR TO CONNECT', error);
         }
-    }
+    };
 
     // streaming the data
     const startStreamingData=async(device:Device)=>{
@@ -110,16 +126,15 @@ export default function useBLE():BluetoothLowEnergyApi{
             return;
         }
 
-        const rawData=atob(characteristic.value);
-        let data=-1;
-        // return data(Number(rawData[1]))
+        setMessageData(base64.decode(characteristic?.value));
     }
 
     return {
         requestPermissions,
         scanForDevices,
         connectToDevice,
-        // allDevices,
+        allDevices,
+        message,
     };
     
-}
+};
