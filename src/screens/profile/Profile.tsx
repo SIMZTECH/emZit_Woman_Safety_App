@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable prettier/prettier */
 /* eslint-disable jsx-quotes */
 /* eslint-disable no-trailing-spaces */
@@ -7,11 +8,11 @@ import React, { useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProfileDataRow from './ProfileDataRow';
 import AlergiesRow from './AlergiesRow';
 import {friend} from '../../../assets/imgaes/UIDesign/OtherImages';
+import Pie from 'react-native-pie';
 
 
 const Profile = () => {
@@ -35,7 +36,7 @@ const Profile = () => {
             <View className="w-8 h-8 bg-[#82b296] rounded-md" />
           </View>
           <View className="space-y-1">
-            <Text className="text-[16px]">{'Hello Samson'}</Text>
+            <Text className="text-[16px]">{'Hello Monde'}</Text>
             <Text className="text-[#f00100] font-medium">Complete Profile</Text>
           </View>
         </View>
@@ -62,9 +63,21 @@ const Profile = () => {
         <View className="px-6 flex-row space-x-2">
           <View className="space-y-2">
             <Text className="text-[#c3c6d3] tex-[13px]">Profile data</Text>
-            <View className="flex-row space-x-1">
-              <Entypo name="pie-chart" color={'#f00100'} size={20}/>
-              <Text className="text-[#c3c6d3]">60%</Text>
+            <View className="items-center justify-center relative w-14 h-14">
+              <Pie
+                  radius={20}
+                  innerRadius={15}
+                  sections={[
+                    {
+                      percentage: 70,
+                      color: '#82b296',
+                    },
+                  ]}
+                  backgroundColor="#eff2fa"
+                />
+              
+              <Text className="text-[#f00100] absolute text-[12px] font-medium">70%</Text> 
+
             </View>
           </View>
           <View className="items-center flex-1 ">
@@ -74,7 +87,7 @@ const Profile = () => {
               className="w-full h-full"
               resizeMode="contain"/>
             </View>
-            <Text className="text-[24px] text-black font-medium mt-2 -ml-6">Samson Mumba</Text>
+            <Text className="text-[24px] text-black font-medium mt-2 -ml-6">Monde Kambeu</Text>
             <Text className="text-[14px] text-[#c3c6d3] -ml-6">14 January, 1998</Text>
           </View>
           <View className="flex-row space-x-1">
@@ -125,15 +138,17 @@ const Profile = () => {
               title={'Pineapple'}
               description={'Watering eyes'}
               color={'orange'} 
-              borderSizeTop={undefined} 
-              borderSizeBottom={undefined}            />
+              borderSizeTop={1} 
+              borderSizeBottom={undefined}
+            />
              <AlergiesRow 
               iconName={'fruit-cherries'}
               title={'Cherries'}
               description={'Rush'}
               color={'green'}
-              borderSizeBottom={1} 
-              borderSizeTop={1}            />
+              borderSizeTop={1} 
+              borderSizeBottom={0.5}            
+            />
           </View>
         </View>
       </View>

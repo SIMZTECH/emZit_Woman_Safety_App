@@ -10,11 +10,13 @@ import { creatTable } from './src/database/SQLite_DB';
 import DrawerNavigation from './src/navigations/DrawerNavigation';
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
 
+
 const App = () => {
 
   useEffect(()=>{
     creatTable('contacts','');
     // dropTable('contacts','');
+
   })
 
   return (

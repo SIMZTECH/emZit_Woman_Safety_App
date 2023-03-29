@@ -19,6 +19,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { friend, imageMap } from '../../../assets/imgaes/UIDesign/OtherImages';
 import { AppContext } from '../../../global/GlobalState';
+import useBLE from '../../useBLe';
 
 
   const {width,height} = Dimensions.get('screen');
@@ -26,6 +27,9 @@ import { AppContext } from '../../../global/GlobalState';
   LogBox.ignoreLogs(['new NativeEventEmitter']);
 
   const App = ({navigation}) => {
+    const {getDeviceInfor}=useBLE();
+
+
     // get global state data
     const {
           isDeviceConnected, setIsDeviceConnected,
@@ -49,6 +53,8 @@ import { AppContext } from '../../../global/GlobalState';
     // use effect
     useEffect(() => {
 
+      //get device information
+      getDeviceInfor();
      
     });
 
@@ -93,7 +99,7 @@ import { AppContext } from '../../../global/GlobalState';
           >
               <MaterialCommunityIcons name="access-point" size={54} color="white"/>
           </View>
-          <Text className='b mb-4'>{messageData}</Text>
+          <Text className='b mb-4 bg-[#f00100] px-2 items-center rounded-sm text-white mt-2 font-medium shadow-md'>{messageData}</Text>
 
 
           <Text className="b text-[20px] font-semibold text-black">Not sure what to do?</Text>

@@ -14,16 +14,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native';
 import BlueToothDevice from './BlueToothDevice';
-import { ScrollView } from 'react-native';
-import UUID from '../../../assets/constants/UUID';
-import { BleError, BleManager, Characteristic, Device } from 'react-native-ble-plx';
-import base64 from 'react-native-base64';
 import useBLE from '../../useBLe';
 
-
-
-const {BOX_CHARACTERISTIC_UUID,DATA_CHARACTERISTIC_UUID,SERVICE_UUID} = UUID;
-const bleManager = new BleManager();
 
 // remove indicator global scope
 const handleRemoveLoader=(status:Boolean, time:number,method:Function)=>{
@@ -33,9 +25,8 @@ const handleRemoveLoader=(status:Boolean, time:number,method:Function)=>{
   }
 
 const BlueToothScreen = () => {
-    const{requestPermissions,connectToDevice,message,allDevices,scanForDevices}=useBLE();
+    const{requestPermissions,connectToDevice,scanForDevices,bluetoothDeviceServices,getDeviceInfor}=useBLE();
 
-    const [allDiscoveredDevices,setAllDiscoveredDevices]=useState<Device[]>([]);
     const [internalLoader,setInternalLoader]= useState<Boolean>(false);
     const [mainlLoader,setMainLoader]= useState<Boolean>(true);
     const Navigation=useNavigation();
@@ -47,6 +38,7 @@ const BlueToothScreen = () => {
         availableBluetoothDevices, setAvailableBluetoothDevices,
         messageData, setMessageData,
         boxValue, setBoxValue,
+        deviceInformation
     } = useContext(AppContext);
 
     useLayoutEffect(()=>{
@@ -73,19 +65,15 @@ const BlueToothScreen = () => {
 
     });
 
-    
-
-   
-
 
     // console.log("Set:\t"+bluetoothPermission);
-   if(allDevices?.length>0){
-    console.log("set:\t"+allDevices[0].id +"\t"+allDevices[0].name);
+   if(availableBluetoothDevices?.length>0){
+    console.log("set:\t"+availableBluetoothDevices[0].id +"\t"+availableBluetoothDevices[0].name);
    }else{
 
-   }
+   };
 
-   console.log("get:\t"+connectedDevice[0]);
+   console.log(deviceInformation);
    
 
   return (
@@ -103,7 +91,7 @@ const BlueToothScreen = () => {
           <View className="px-3">
               <View className="mt-8">
                   <Text className="text-black text-[18px]">Device name</Text>
-                  <Text className="text-[#b4b7c2] text-[15px]">{'Infinix NOTE 7 Lite'}</Text>
+                  <Text className="text-[#b4b7c2] text-[15px]">{deviceInformation}</Text>
               </View>
 
               <View className="flex-row justify-between pr-4 mt-3">
@@ -122,20 +110,15 @@ const BlueToothScreen = () => {
 
 
               <View className="mt-3 flex-[50%] pb-3">
-                {(allDevices?.length>0)?(
+                {(availableBluetoothDevices?.length>0)?(
                       <Pressable
                           onPress={async () => {
+                                bluetoothDeviceServices(availableBluetoothDevices[0]);
                               if (isDeviceConnected) {
                                   setInternalLoader(true);
-                                  setIsDeviceConnected(false)
-                                //   disconnect device logic
 
                               } else {
                                   setInternalLoader(true);
-
-                                //   connect to device logic
-                                connectToDevice(allDevices[0]);
-
                               }
                               handleRemoveLoader(false, 2000, setInternalLoader);
 
@@ -143,8 +126,8 @@ const BlueToothScreen = () => {
                           <BlueToothDevice
                               bleStatus={isDeviceConnected}
                               internalLoader={internalLoader}
-                              data={allDevices[0]}
-                              key={allDevices[0].id}
+                              data={availableBluetoothDevices[0]}
+                              key={availableBluetoothDevices[0].id}
                           />
                       </Pressable>
 

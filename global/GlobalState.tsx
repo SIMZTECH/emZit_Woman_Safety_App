@@ -10,9 +10,10 @@ export const GlobalStateProvider=({children})=>{
     const [totalUserContacts,setTotalUserContacts]= React.useState<number>(0);
     const [locationPermission,SetLocationPermission]= React.useState<Boolean>(false);
     const [bluetoothPermission,SetBluetoothPermission]= React.useState<Boolean>(false);
-    const [connectedDevice,setConnectedDevice] = React.useState<Device[]>([]);
+    const [connectedDevice,setConnectedDevice] = React.useState<Device>();
     const [availableBluetoothDevices,setAvailableBluetoothDevices] = React.useState<Device[]>([]);
     const [messageData,setMessageData] = React.useState<string>('no data');
+    const [deviceInformation,setDeviceInformation] = React.useState();
     const [boxValue,setBoxValue] = React.useState<string>('no box value');
 
   return (
@@ -26,6 +27,7 @@ export const GlobalStateProvider=({children})=>{
         availableBluetoothDevices,setAvailableBluetoothDevices,
         messageData,setMessageData,
         boxValue,setBoxValue,
+        deviceInformation,setDeviceInformation
     }}>
       {children}
     </AppContext.Provider>
