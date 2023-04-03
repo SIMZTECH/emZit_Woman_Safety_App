@@ -27,18 +27,14 @@ import useBLE from '../../useBLe';
   LogBox.ignoreLogs(['new NativeEventEmitter']);
 
   const App = ({navigation}) => {
-    const {getDeviceInfor}=useBLE();
-
+    const {getDeviceInfor,getUserLocation,requestPermissions}=useBLE();
 
     // get global state data
     const {
-          isDeviceConnected, setIsDeviceConnected,
-          locationPermission, SetLocationPermission,
-          bluetoothPermission, SetBluetoothPermission,
-          connectedDevice, setConnectedDevice,
-          availableBluetoothDevices, setAvailableBluetoothDevices,
-          messageData, setMessageData,
-          boxValue, setBoxValue,
+
+          isDeviceConnected,
+          messageData,
+          
     } = useContext(AppContext);
 
     const Navigation = useNavigation();
@@ -53,10 +49,11 @@ import useBLE from '../../useBLe';
     // use effect
     useEffect(() => {
 
-      //get device information
-      getDeviceInfor();
-     
+       
     });
+
+    //get device information
+    getDeviceInfor();
 
     const handleOnPressConnect = ()=>{
       

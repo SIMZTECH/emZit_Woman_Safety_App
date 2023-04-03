@@ -1,3 +1,4 @@
+/* eslint-disable space-infix-ops */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
@@ -10,7 +11,7 @@ import ContactRow from '../../components/ContactRow';
 import { saveToDatabse,deleteItemFromDatabase,GetFromDatabse} from '../../database/SQLite_DB';
 import { ContactsModel } from '../../database/Model';
 import { openDatabase } from 'react-native-sqlite-storage';
-import { woman,sister,brother,auntie,friend,other,man, uncle} from '../../../assets/imgaes/UIDesign/OtherImages';
+import { woman,sister,brother,auntie,friend,other,man,uncle} from '../../../assets/imgaes/UIDesign/OtherImages';
 
 const db=openDatabase({ name:'emergencyApp', location: 'default' });
 
@@ -69,10 +70,12 @@ const Contacts = () => {
 
       case 'Brother':
         icon=brother;
+
         break;
     
-      default:
+      case 'Other':
         icon=other;
+
         break;
     }
     return icon;

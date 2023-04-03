@@ -2,6 +2,7 @@ package com.app;
 
 // added manually
 import com.reactnativecommunity.art.ARTPackage;
+// import com.github.reactnativecommunity.location.RNLocationPackage;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
@@ -39,7 +40,7 @@ public class MainApplication extends Application implements ReactApplication {
         //   @SuppressWarnings("UnnecessaryLocalVariable")
         //   List<ReactPackage> packages = new PackageList(this).getPackages();
           
-        //   packages.add(new ARTPackage());
+          // packages.add(new ARTPackage());
 
         //   return packages;
         // }
@@ -59,6 +60,28 @@ public class MainApplication extends Application implements ReactApplication {
           return BuildConfig.IS_HERMES_ENABLED;
         }
       };
+
+   // added manually
+    //  @Override
+    //   protected List<ReactPackage> getPackages() {
+    //     @SuppressWarnings("UnnecessaryLocalVariable")
+    //     List<ReactPackage> packages = new PackageList(this).getPackages();
+
+    //     packages.add(new ARTPackage());
+
+    //     return packages;
+    //   }
+
+      //addede additional package
+      // @Override
+      // protected List<ReactPackage> getPackages() {
+      //     return Arrays.asList(
+      //             new MainReactPackage(),
+      //             new RNLocationPackage()
+      //     );
+      // }
+    
+ 
 
   @Override
   public ReactNativeHost getReactNativeHost() {

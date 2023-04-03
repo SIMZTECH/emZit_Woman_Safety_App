@@ -1,3 +1,6 @@
+/* eslint-disable quotes */
+/* eslint-disable prettier/prettier */
+/* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Platform, PermissionsAndroid, Alert} from 'react-native';
@@ -7,6 +10,7 @@ import { atob } from 'react-native-quick-base64';
 import base64 from 'react-native-base64';
 import { AppContext } from '../global/GlobalState';
 import DeviceInfo from 'react-native-device-info';
+import Geolocation from 'react-native-geolocation-service';
 
 const SERVICE_UUID="8ccbd4e6-bd76-11ed-afa1-0242ac120002";
 const DATA_CHARACTERISTIC_UUID="9d99dafc-bd76-11ed-afa1-0242ac120002";
@@ -24,6 +28,7 @@ interface BluetoothLowEnergyApi{
     bluetoothDeviceServices(periperial:Device):void;
     allDevices:Device[];
     getDeviceInfor():void;
+    getUserLocation(permission:boolean):void;
 }
 
 // const [allDevices,setAllDevices] = useState<Device[]>([]);
@@ -33,9 +38,12 @@ export default function useBLE():BluetoothLowEnergyApi{
 
     const{
         setIsDeviceConnected,
+        isDeviceConnected,
         setMessageData,
-        availableBluetoothDevices,setAvailableBluetoothDevices,
-        setDeviceInformation
+        availableBluetoothDevices,
+        setAvailableBluetoothDevices,
+        setDeviceInformation,
+        SetLocationCoordination,
     }=useContext(AppContext);
 
     // request permissions method
@@ -52,6 +60,8 @@ export default function useBLE():BluetoothLowEnergyApi{
                 }
             );
             callback(grantedStatus === PermissionsAndroid.RESULTS.GRANTED);
+
+            console.log(grantedStatus);
         }else{
             callback(true);
         }
@@ -62,14 +72,19 @@ export default function useBLE():BluetoothLowEnergyApi{
         if(availableBluetoothDevices){
             return devices.findIndex((device)=>nextDevice.id === device.id) > -1;
         }
-       
     };
 
     // scan for devices
     const scanForDevices=()=>{
         bleManager.startDeviceScan(null, null, (error, device)=>{
             if(error){
-                console.log(error);
+                if(isDeviceConnected){
+                    console.log(error);
+                    return;
+                }else{
+                    console.log(error);
+                    Alert.alert('Opps!!',error.message);
+                }
             }
             if(device && device.name?.includes('ESP32-R')){
                 // console.log(device.name)
@@ -80,7 +95,10 @@ export default function useBLE():BluetoothLowEnergyApi{
                     }
                     return prevState;
                 })
+
             }
+            // stop scanning
+            bleManager.stopDeviceScan();
         })
     };
 
@@ -93,7 +111,6 @@ export default function useBLE():BluetoothLowEnergyApi{
             setIsDeviceConnected(true);//set connection status to true
 
             console.log(deviceConnection);
-
 
             bleManager.stopDeviceScan();
 
@@ -111,14 +128,13 @@ export default function useBLE():BluetoothLowEnergyApi{
         if(await periperial.isConnected()){
             // disconnect
             periperial.cancelConnection();
-            setIsDeviceConnected(false)//set connection status to true
+            setIsDeviceConnected(false)//set connection status to false
 
-            console.log(`${periperial?.name}\t Disconnected Successfully`);
+            setAvailableBluetoothDevices([]); //clear state
             // clear global state
-            setAvailableBluetoothDevices([]);
             setMessageData('no data');
-            // start scanning
-            scanForDevices();
+
+            console.log(`${periperial?.name}\t Disconnected Successfully`); 
         }else{
             // connect to device
             connectToDevice(periperial);
@@ -160,6 +176,27 @@ export default function useBLE():BluetoothLowEnergyApi{
         })
     };
 
+
+    // read user Location coordinates
+    const getUserLocation=async(permission:boolean)=>{
+        if(permission){
+                Geolocation.getCurrentPosition((location)=>{
+                    // console.log(location);
+                    SetLocationCoordination(location.coords);
+                },
+                (error)=>{
+                    console.log(error.code, error.message);
+                },
+                {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+                
+            );
+        }else{
+            return
+
+        }
+
+    };
+
     return {
         requestPermissions,
         scanForDevices,
@@ -167,6 +204,7 @@ export default function useBLE():BluetoothLowEnergyApi{
         allDevices,
         bluetoothDeviceServices,
         getDeviceInfor,
+        getUserLocation,
     };
     
 };

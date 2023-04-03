@@ -152,6 +152,9 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
+    //added manually to handle location
+    // implementation project(':react-native-location')
+
     // added manually
    implementation project(':react-native-art')
 

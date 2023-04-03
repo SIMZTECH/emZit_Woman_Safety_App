@@ -33,12 +33,9 @@ const BlueToothScreen = () => {
 
     const {
         isDeviceConnected, setIsDeviceConnected,
-        bluetoothPermission, SetBluetoothPermission,
-        connectedDevice, setConnectedDevice,
         availableBluetoothDevices, setAvailableBluetoothDevices,
-        messageData, setMessageData,
-        boxValue, setBoxValue,
-        deviceInformation
+        deviceInformation,
+        SetBluetoothPermission,
     } = useContext(AppContext);
 
     useLayoutEffect(()=>{
@@ -55,17 +52,21 @@ const BlueToothScreen = () => {
 
     useEffect(()=>{
 
-        // scan for devices
-        scanCallBack();
-
         // request permission
-        requestPermissions((isGranted:boolean)=>{
-            SetBluetoothPermission(isGranted);
-        });
+       requestPermissions((isGranted:boolean)=>{
+        SetBluetoothPermission(isGranted);
+       });
 
-    });
+    
+    // scan for devices
+    scanCallBack();
+     
+    }, [availableBluetoothDevices, requestPermissions, SetBluetoothPermission, scanCallBack]);
 
+    
+     
 
+    
     // console.log("Set:\t"+bluetoothPermission);
    if(availableBluetoothDevices?.length>0){
     console.log("set:\t"+availableBluetoothDevices[0].id +"\t"+availableBluetoothDevices[0].name);
@@ -74,7 +75,6 @@ const BlueToothScreen = () => {
    };
 
    console.log(deviceInformation);
-   
 
   return (
       <SafeAreaView className="bg-[#eff2fa] flex-1">
@@ -96,16 +96,14 @@ const BlueToothScreen = () => {
 
               <View className="flex-row justify-between pr-4 mt-3">
                   <Text className="text-[#f00100] text-[16px] font-medium">Available devices</Text>
-                  <TouchableOpacity
-                   onPress={()=>{}}
-                  >
+                  <View>
                     {mainlLoader?(
                         <ActivityIndicator size={24} color={'#f00100'}/>
                         ):(
                          <Ionicons color={'#f00100'} size={24} name="refresh"/>
                         )
                     }
-                  </TouchableOpacity>
+                  </View>
               </View>
 
 

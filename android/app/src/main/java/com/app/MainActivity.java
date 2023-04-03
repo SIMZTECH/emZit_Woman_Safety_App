@@ -3,9 +3,6 @@ package com.app;
 // added manually
 import android.os.Bundle;
 
-// added manually
-// import com.reactnativecommunity.art.ARTPackage;
-
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
@@ -21,18 +18,6 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "App";
   }
-
-
-  // added manually
-  // @Override
-  //   protected List<ReactPackage> getPackages() {
-  //     @SuppressWarnings("UnnecessaryLocalVariable")
-  //     List<ReactPackage> packages = new PackageList(this).getPackages();
-      
-  //     packages.add(new ARTPackage());
-      
-  //     return packages;
-  //   }
 
   // ...added manually
   @Override
