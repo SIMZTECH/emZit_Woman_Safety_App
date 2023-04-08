@@ -10,7 +10,6 @@
     "test": "jest"
   },
   "dependencies": {
-    
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -25,7 +24,6 @@
     "react-native-ble-plx": "^2.0.3",
     "react-native-device-info": "^10.5.0",
     "react-native-extra-dimensions-android": "^1.2.5",
-    "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-paper": "^5.3.1",
     "react-native-pie": "^1.1.2",

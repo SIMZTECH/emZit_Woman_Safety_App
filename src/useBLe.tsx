@@ -10,7 +10,6 @@ import { atob } from 'react-native-quick-base64';
 import base64 from 'react-native-base64';
 import { AppContext } from '../global/GlobalState';
 import DeviceInfo from 'react-native-device-info';
-import Geolocation from 'react-native-geolocation-service';
 
 const SERVICE_UUID="8ccbd4e6-bd76-11ed-afa1-0242ac120002";
 const DATA_CHARACTERISTIC_UUID="9d99dafc-bd76-11ed-afa1-0242ac120002";
@@ -28,7 +27,6 @@ interface BluetoothLowEnergyApi{
     bluetoothDeviceServices(periperial:Device):void;
     allDevices:Device[];
     getDeviceInfor():void;
-    getUserLocation(permission:boolean):void;
 }
 
 // const [allDevices,setAllDevices] = useState<Device[]>([]);
@@ -43,7 +41,6 @@ export default function useBLE():BluetoothLowEnergyApi{
         availableBluetoothDevices,
         setAvailableBluetoothDevices,
         setDeviceInformation,
-        SetLocationCoordination,
     }=useContext(AppContext);
 
     // request permissions method
@@ -178,24 +175,24 @@ export default function useBLE():BluetoothLowEnergyApi{
 
 
     // read user Location coordinates
-    const getUserLocation=async(permission:boolean)=>{
-        if(permission){
-                Geolocation.getCurrentPosition((location)=>{
-                    // console.log(location);
-                    SetLocationCoordination(location.coords);
-                },
-                (error)=>{
-                    console.log(error.code, error.message);
-                },
-                {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    // const getUserLocation=async(permission:boolean)=>{
+    //     if(permission){
+    //             Geolocation.getCurrentPosition((location)=>{
+    //                 // console.log(location);
+    //                 SetLocationCoordination(location.coords);
+    //             },
+    //             (error)=>{
+    //                 console.log(error.code, error.message);
+    //             },
+    //             {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
                 
-            );
-        }else{
-            return
+    //         );
+    //     }else{
+    //         return
 
-        }
+    //     }
 
-    };
+    // };
 
     return {
         requestPermissions,
@@ -203,8 +200,7 @@ export default function useBLE():BluetoothLowEnergyApi{
         connectToDevice,
         allDevices,
         bluetoothDeviceServices,
-        getDeviceInfor,
-        getUserLocation,
+        getDeviceInfor
     };
     
 };
