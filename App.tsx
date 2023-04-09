@@ -9,6 +9,8 @@ import 'react-native-gesture-handler';
 import { creatTable } from './src/database/SQLite_DB';
 import DrawerNavigation from './src/navigations/DrawerNavigation';
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
+import SliderScreen from './src/pages/SliderScreen';
+import MainRouteNavigation from './src/navigations/MainRouteNavigation';
 
 
 const App = () => {
@@ -22,7 +24,7 @@ const App = () => {
   return (
     <GlobalStateProvider>
        <NavigationContainer>
-          <DrawerNavigation />
+          <MainRouteNavigation />
       </NavigationContainer>
     </GlobalStateProvider>
       
