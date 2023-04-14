@@ -27,7 +27,7 @@ import useBLE from '../../useBLe';
   LogBox.ignoreLogs(['new NativeEventEmitter']);
 
   const App = ({navigation}) => {
-    const {getDeviceInfor,getUserLocation,requestPermissions}=useBLE();
+    const {getDeviceInfor,requestPermissions}=useBLE();
 
     // get global state data
     const {

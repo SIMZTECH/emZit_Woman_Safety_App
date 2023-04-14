@@ -1,3 +1,4 @@
+/* eslint-disable space-infix-ops */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 /* eslint-disable keyword-spacing */
@@ -22,6 +23,7 @@ const bleManager=new BleManager();
 
 interface BluetoothLowEnergyApi{
     requestPermissions(callback:PermissionCallback):Promise<void>;
+    requestContactsPermissions(callback:PermissionCallback):Promise<void>;
     connectToDevice(device:Device):Promise<void>;
     scanForDevices():void;
     bluetoothDeviceServices(periperial:Device):void;
@@ -62,6 +64,27 @@ export default function useBLE():BluetoothLowEnergyApi{
         }else{
             callback(true);
         }
+    };//end of request permission method
+
+    const requestContactsPermissions=async(callback:PermissionCallback)=>{
+        if(Platform.OS==='android'){
+            const grantedStatus=await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                  'title': 'Contacts',
+                  'message': 'This app would like to view your contacts.',
+                  'buttonNegative':'cancel',
+                  'buttonPositive':'ok',
+                  'buttonNeutral':'Maybe Later'
+                }
+              );
+            callback(grantedStatus === PermissionsAndroid.RESULTS.GRANTED);
+
+            console.log("contact\t"+grantedStatus);
+        }else{
+            callback(true);
+        }
+
     };//end of request permission method
 
     // check for duplicates
@@ -173,34 +196,14 @@ export default function useBLE():BluetoothLowEnergyApi{
         })
     };
 
-
-    // read user Location coordinates
-    // const getUserLocation=async(permission:boolean)=>{
-    //     if(permission){
-    //             Geolocation.getCurrentPosition((location)=>{
-    //                 // console.log(location);
-    //                 SetLocationCoordination(location.coords);
-    //             },
-    //             (error)=>{
-    //                 console.log(error.code, error.message);
-    //             },
-    //             {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-                
-    //         );
-    //     }else{
-    //         return
-
-    //     }
-
-    // };
-
     return {
         requestPermissions,
         scanForDevices,
         connectToDevice,
         allDevices,
         bluetoothDeviceServices,
-        getDeviceInfor
+        getDeviceInfor,
+        requestContactsPermissions  
     };
     
 };

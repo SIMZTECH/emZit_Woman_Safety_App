@@ -2,6 +2,7 @@ package com.app;
 
 // added manually
 import com.reactnativecommunity.art.ARTPackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 // import com.github.reactnativecommunity.location.RNLocationPackage;
 
 import android.app.Application;
@@ -30,9 +31,15 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
 
-          packages.add(new ARTPackage());
+          packages.add(
+            new ARTPackage()
+            // new ReactNativeContacts()
+            );
+
           return packages;
         }
+
+
 
         // added manually
         // @Override

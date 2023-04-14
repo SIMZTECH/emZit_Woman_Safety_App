@@ -15,19 +15,28 @@ import { FlatList } from 'react-native-gesture-handler';
 import SliderData from '../../assets/SliderData';
 import SliderComponent from './SliderComponent';
 import Pagination from './Pagination';
-import { useNavigation } from '@react-navigation/native';
+import useBLE from '../useBLe';
+import { AppContext } from '../../global/GlobalState';
 
-const{height,width}=Dimensions.get('screen');
+const {height,width} = Dimensions.get('screen');
+
 
 const SliderScreen = ({navigation}) => {
+    const {requestContactsPermissions,requestPermissions} = useBLE();
+    const { setContactsPermission,
+            SetLocationPermission,
+            SetBluetoothPermission
+    } = React.useContext(AppContext);
+
     const[sliderIndex,setSliderIndex]=useState<number>(0);
     const[disabledButton,setDisabledButton]=useState<boolean>(true);
 
+
+
     const handleOnViewableChange=useRef((viewableItems)=>{
         console.log(viewableItems.changed[0]);
-        const{index}=viewableItems.changed[0]
+        const {index} = viewableItems.changed[0]
         setSliderIndex(index);
-        
     }).current;
 
     const viewableConfig=useRef({
@@ -35,9 +44,13 @@ const SliderScreen = ({navigation}) => {
     }).current;
 
     useEffect(() => {
-        console.log(sliderIndex);
-        console.log(disabledButton);
-    })
+        // handle permissions from here
+        requestContactsPermissions((granted:boolean)=>{
+            if (granted){
+                setContactsPermission(granted);
+            }
+        });
+    },[requestContactsPermissions, setContactsPermission]);
     
 
   return (
@@ -47,7 +60,9 @@ const SliderScreen = ({navigation}) => {
         >
             <View className='flex-row justify-between items-center px-4 pt-4'>
                 <Image source={heartRate} className='w-12 h-12' />
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={()=>navigation.navigate('DrawerNavigation')}
+                >
                     <Text className='text-[#f00100] font-normal text-[15px]'>SKIP</Text>
                 </TouchableOpacity>
             </View>

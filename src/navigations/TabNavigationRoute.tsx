@@ -9,6 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import SettingsScreen from '../screens/settings/SettingsScreen';
 import Contacts from '../screens/contacts/Contacts';
 import Home from '../screens/home/Home';
+import ContactScreenTopNavigation from './ContactScreenTopNavigation';
 import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
@@ -48,7 +49,7 @@ const TabNavigationRoute = ({navigation}) => {
       })}
       >
             <Tab.Screen name='Home' component={Home}/>
-            <Tab.Screen name='Contacts' component={Contacts}/>
+            <Tab.Screen name='Contacts' component={ContactScreenTopNavigation}/>
             <Tab.Screen name='Profile' component={Profile}/>
             <Tab.Screen name='Settings' component={SettingsScreen}/>
         </Tab.Navigator>

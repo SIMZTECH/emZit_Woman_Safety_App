@@ -170,6 +170,10 @@ dependencies {
     // added manually
    implementation project(':react-native-art')
 
+
+    //    added manually for contacts
+    // implementation project(':react-native-contacts')
+
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")

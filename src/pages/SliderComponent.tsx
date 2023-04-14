@@ -8,9 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 const{height,width} = Dimensions.get('screen');
 
 const SliderComponent = ({data}) => {
-    const{item}=data;
-
-    console.log(data)
+    const {item} = data;
 
   return (
     <View 

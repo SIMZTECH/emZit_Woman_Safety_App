@@ -4,11 +4,18 @@ import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { AppContext } from '../../../global/GlobalState';
 
 const SettingsScreen = () => {
   const Navigation=useNavigation();
-  const[toggleleft,setToggleLeft]=useState<number>(6);
+  const[toggleleft,setToggleLeft]=useState<number>(0);
+  const[toggleRight,setToggleRight]=useState<number>(6);
+
+  const {
+    contactsPermission,
+    bluetoothPermission,
+  } = React.useContext(AppContext);
 
   useLayoutEffect(()=>{
     Navigation.setOptions({
@@ -18,14 +25,22 @@ const SettingsScreen = () => {
 
   });
 
-  const handleToggleBtn=()=>{
-    if(toggleleft==6){
-      setToggleLeft(0);
-    }else{
-      setToggleLeft(6);
-    }
+  const handleToggleBtnBluetoothPermission=()=>{
+    // if(){
+
+
+    // }else{
+
+    // }
+    
+  };
+
+  const handleToggleBtnContactPermission=()=>{
 
   };
+
+  console.log(bluetoothPermission);
+  console.log(contactsPermission);
 
   return (
     <View className='px-5 pt-8 bg-white flex-1'>
@@ -40,18 +55,33 @@ const SettingsScreen = () => {
 
       <View className=' space-y-2 mt-5'>
         <Text className='text-[#ff6c6c] font-normal'>PERMISSIONS</Text>
-        {/* Catch*/}
+        {/* 1 */}
         <View className='flex-row h-10 bg-[#eff2fa] rounded-md items-center'>
           <View className='flex-row items-center px-2 space-x-2'>
             <Ionicons name='md-location-outline' size={20} color={'#ff6c6c'}/>
-            <Text>Allow location</Text>
+            <Text>Allow Location Access</Text>
           </View>
           {/* toggle */}
           <View className='h-full flex-1 items-end justify-center pr-3'>
             <Pressable 
-              onPress={handleToggleBtn}
+              onPress={ handleToggleBtnBluetoothPermission}
               className='h-6 w-12 px-0.5 pt-0.5 pb-0.5 bg-orange-400 rounded-full bg-[#f00100] relative transition-all'>
-              <Text className={`h-full w-5 bg-white rounded-full left-${toggleleft} transition`}></Text>
+              <Text className={`h-full w-5 bg-white rounded-full left-${bluetoothPermission ? toggleleft:toggleRight} transition`} />
+            </Pressable>
+          </View>
+        </View>
+        {/* 2 */}
+        <View className="flex-row h-10 bg-[#eff2fa] rounded-md items-center">
+          <View className='flex-row items-center px-2 space-x-2'>
+            <AntDesign name='contacts' size={20} color={'#ff6c6c'}/>
+            <Text>Allow Contacts Access </Text>
+          </View>
+          {/* toggle */}
+          <View className="h-full flex-1 items-end justify-center pr-3">
+            <Pressable 
+              onPress={handleToggleBtnContactPermission}
+              className='h-6 w-12 px-0.5 pt-0.5 pb-0.5 bg-orange-400 rounded-full bg-[#f00100] relative transition-all'>
+              <Text className={`h-full w-5 bg-white rounded-full left-${contactsPermission ? toggleRight : toggleleft} transition`} />
             </Pressable>
           </View>
         </View>

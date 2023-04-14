@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { Device } from 'react-native-ble-plx';
+import {Contact} from 'react-native-contacts';
 
 export const AppContext=React.createContext();
 
@@ -9,11 +10,13 @@ export const GlobalStateProvider=({children})=>{
     const [userData,setUserData]= React.useState([]);
     const [totalUserContacts,setTotalUserContacts]= React.useState<number>(0);
     const [locationPermission,SetLocationPermission]= React.useState<Boolean>(false);
+    const [contactsPermission,setContactsPermission]= React.useState<Boolean>(false);
     const [locationCoordination,SetLocationCoordination]= React.useState(null);
     const [bluetoothPermission,SetBluetoothPermission]= React.useState<Boolean>(false);
     const [connectedDevice,setConnectedDevice] = React.useState<Device>();
     const [availableBluetoothDevices,setAvailableBluetoothDevices] = React.useState<Device[]>([]);
     const [messageData,setMessageData] = React.useState<string>('no data');
+    const [singleContactDetails,setSingleContactDetails] = React.useState<Contact[]>([]);
     const [deviceInformation,setDeviceInformation] = React.useState();
     const [boxValue,setBoxValue] = React.useState<string>('no box value');
 
@@ -30,6 +33,8 @@ export const GlobalStateProvider=({children})=>{
         locationCoordination,SetLocationCoordination,
         boxValue,setBoxValue,
         deviceInformation,setDeviceInformation,
+        contactsPermission,setContactsPermission,
+        singleContactDetails,setSingleContactDetails
     }}>
       {children}
     </AppContext.Provider>
