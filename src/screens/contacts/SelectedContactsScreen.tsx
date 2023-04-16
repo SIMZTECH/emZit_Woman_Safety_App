@@ -1,24 +1,25 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable keyword-spacing */
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable jsx-quotes */
 /* eslint-disable prettier/prettier */
-import { Pressable, StyleSheet, Text, ToastAndroid, View } from 'react-native';
-import React, { useLayoutEffect, useState } from 'react';
-import { AppContext } from '../../../global/GlobalState';
+import { Alert, Pressable, StyleSheet, Text,View } from 'react-native';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import {Picker} from '@react-native-picker/picker';
+import { ContactsModel } from '../../database/Model';
+import {SaveToDatabse,RetrieveSingleContactFromDatabse} from '../../database/SQLite_DB';
 
-const SelectedContactsScreen = ()=>{
-  // context states
-  const {
-    singleContactDetails
-  } = React.useContext(AppContext);
-
-  const {displayName,jobTitle,phoneNumbers,company} = singleContactDetails;
-  // const {number,label}=phoneNumbers[0];
+const SelectedContactsScreen = ({route})=>{
+  const {displayName,jobTitle,phoneNumbers,company} = route.params.data;
   const [prority,setPriority]=useState<string>('High');
+  const [singleContact,setSingleContact]=useState<ContactsModel[]>([]);
+
+  const validatedPhonenumber=(phoneNumbers[0]===undefined)?'delete this contact':phoneNumbers[0].number;
 
   const Navigation=useNavigation();
 
@@ -28,12 +29,52 @@ const SelectedContactsScreen = ()=>{
     });
   });
 
-  const onPressedSave=()=>{
-    ToastAndroid.show(`Contact Set as ${prority} Priority`,ToastAndroid.SHORT);
-    Navigation.goBack();
-  };
+  const getSingleContact=useCallback(async() => {
+    if(validatedPhonenumber!='delete this contact'){
+      await RetrieveSingleContactFromDatabse('contacts','',phoneNumbers[0].id)
+      .then((value)=>{
+        console.log(value);
+        setSingleContact(value);
+      });
+    }
+  },[phoneNumbers, validatedPhonenumber])
+  
+
+  useEffect(() => {
+    getSingleContact();
  
-  // console.log(singleContactDetails);
+  },[getSingleContact]);
+  
+
+  const onPressedSave=async()=>{
+    // perform validation to check if number is null or is already saved
+    if(validatedPhonenumber === 'delete this contact'){
+      Alert.alert('Error!!!','This number cannot be saved, edit or delete it from device');
+
+    }else{
+      // check if contact exists as priority before saving
+      if(singleContact?.length>0){
+        if(singleContact[0].contactID==phoneNumbers[0].id){
+          Alert.alert(
+            'Error!!',
+            `This number is already set as ${(singleContact[0].contactPriority)?'High':'Low'} Priority`,
+          );
+        }
+      }else{
+        // save the data
+        let data:ContactsModel = {
+          contactID: phoneNumbers[0].id,
+          contactName: displayName,
+          contactNumber: phoneNumbers[0].number,
+          contactPriority: (prority === 'High') ? true : false,
+          rowID: 0,
+          createdAt: '',
+        };
+        await SaveToDatabse('contacts', data, '');
+        Navigation.goBack();
+      }
+    }
+  };
 
   return (
     <View className='flex-1'>
@@ -52,7 +93,7 @@ const SelectedContactsScreen = ()=>{
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="call" size={22} color={'#f00100'} />
             <View>
-              <Text>{'+260 969 718 806'}</Text>
+              <Text>{'+26 '+validatedPhonenumber}</Text>
               <Text>Primary Number</Text>
             </View>
           </View>
@@ -62,7 +103,7 @@ const SelectedContactsScreen = ()=>{
         <View className=' bg-white h-[55px] rounded-md shadow-md flex-row items-center justify-between px-3'>
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="videocam" size={22} color={'#f00100'} />
-            <Text>{'+260 969 718 806'}</Text>
+            <Text>{'+26 '+validatedPhonenumber}</Text>
           </View>
           <Ionicons name="videocam" size={22} color={'#f00100'} />
         </View>
@@ -70,7 +111,7 @@ const SelectedContactsScreen = ()=>{
         <View className=' bg-white h-[55px] rounded-md shadow-md flex-row items-center justify-between px-3'>
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="logo-whatsapp" size={22} color={'#f00100'} />
-            <Text>{'+260 969 718 806'}</Text>
+            <Text>{'+26 '+validatedPhonenumber}</Text>
           </View>
           <Ionicons name="logo-whatsapp" size={22} color={'#f00100'} />
         </View>
@@ -109,4 +150,4 @@ const SelectedContactsScreen = ()=>{
 
 export default SelectedContactsScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({})

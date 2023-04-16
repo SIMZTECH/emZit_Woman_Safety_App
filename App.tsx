@@ -6,10 +6,8 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import 'react-native-gesture-handler';
-import { creatTable } from './src/database/SQLite_DB';
-import DrawerNavigation from './src/navigations/DrawerNavigation';
+import { creatTable, dropTable } from './src/database/SQLite_DB';
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
-import SliderScreen from './src/pages/SliderScreen';
 import MainRouteNavigation from './src/navigations/MainRouteNavigation';
 
 
@@ -18,7 +16,6 @@ const App = () => {
   useEffect(()=>{
     creatTable('contacts','');
     // dropTable('contacts','');
-
   })
 
   return (

@@ -8,13 +8,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import React, { useCallback, useEffect, useState} from 'react';
-import { Alert, PermissionsAndroid, StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList} from 'react-native';
+import { Alert,StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList} from 'react-native';
 import {Contact, getAll} from 'react-native-contacts';
 import { AppContext } from '../../../global/GlobalState';
 import SingleContactComponent from './SingleContactComponent';
 
 const AllUserContactsScreen = ({navigation}) => {
-
   // context states
   const {
     contactsPermission
@@ -29,7 +28,6 @@ const AllUserContactsScreen = ({navigation}) => {
       if(contactsPermission){
         setAllUserContacts(contacts);
       };
-      
     })
     .catch((e)=>{
       Alert.alert('Warning!', e.message());
@@ -44,7 +42,7 @@ const AllUserContactsScreen = ({navigation}) => {
   console.log("data\t"+JSON.stringify(allUserContacts));
 
   return (
-    <View className='bg-white flex-1 pt-4'>
+    <View className="flex-1 pt-4 bg-[#eff2fa]">
       {(allUserContacts.length > 0 ) ? (
           <VirtualizedList
             data={allUserContacts}
@@ -56,12 +54,13 @@ const AllUserContactsScreen = ({navigation}) => {
           />
 
         ) : (
-          <ActivityIndicator size={24} color={'#f00100'}
-          className="items-center mt-10"
-          />
+          <View className="items-center mt-10 w-12 h-12 bg-white justify-center rounded-full shadow-md self-center">
+            <ActivityIndicator size={30} color={'#f00100'} />
+          </View>
         )
       }
     </View>
+    
   );
 };
 

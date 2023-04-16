@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable semi */
 /* eslint-disable prettier/prettier */
 export {default as imageMap} from './map-point.png'

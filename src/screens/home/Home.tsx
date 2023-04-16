@@ -7,17 +7,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { useNavigation } from '@react-navigation/native';
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
 import {
   Alert, Dimensions, Image, LogBox, Pressable, SafeAreaView, StyleSheet,
-  Text, TouchableOpacity, View
+  Text, TouchableOpacity, View,
 } from 'react-native';
-import base64 from 'react-native-base64';
-import { BleError, BleManager, Characteristic, Device } from 'react-native-ble-plx';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { friend, imageMap } from '../../../assets/imgaes/UIDesign/OtherImages';
+import { friend, imageMap} from '../../../assets/imgaes/UIDesign/OtherImages';
 import { AppContext } from '../../../global/GlobalState';
 import useBLE from '../../useBLe';
 
@@ -31,10 +29,8 @@ import useBLE from '../../useBLe';
 
     // get global state data
     const {
-
           isDeviceConnected,
           messageData,
-          
     } = useContext(AppContext);
 
     const Navigation = useNavigation();
@@ -46,19 +42,19 @@ import useBLE from '../../useBLe';
 
     });
 
+    const DeviceInformation = useCallback(()=>{
+      getDeviceInfor();
+
+    },[getDeviceInfor]);
+
     // use effect
     useEffect(() => {
+      DeviceInformation();
 
-       
-    });
-
-    //get device information
-    getDeviceInfor();
+    },[DeviceInformation]);
 
     const handleOnPressConnect = ()=>{
-      
       navigation.navigate('BlueToothScreen');
-
     };
 
     return (
@@ -72,7 +68,7 @@ import useBLE from '../../useBLe';
            </TouchableOpacity>
           
           <View className="flex-row items-center justify-center space-x-2">
-            <AntDesign name="heart" size={17} color="#f00100"/>
+            <FontAwesome5 name='heartbeat' size={20} color={'#ff6c6c'}/>
             <Text className="text-[20px] text-[#c3c6d3]">Emergency<Text className="text-[#f00100] font-bold">App</Text></Text>
           </View>
 
@@ -135,7 +131,6 @@ import useBLE from '../../useBLe';
                     <MaterialCommunityIcons name='access-point-network-off' color={'#b4b7c2'} size={24}/>
                   )
               }
-
             </View>
           </Pressable>
 

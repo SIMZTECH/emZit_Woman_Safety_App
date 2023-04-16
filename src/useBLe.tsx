@@ -126,7 +126,6 @@ export default function useBLE():BluetoothLowEnergyApi{
     const connectToDevice=async(device:Device)=>{
         try {
             const deviceConnection=await bleManager.connectToDevice(device.id);
-            
             // setConnectedDevice(deviceConnection);
             setIsDeviceConnected(true);//set connection status to true
 
@@ -184,7 +183,6 @@ export default function useBLE():BluetoothLowEnergyApi{
             console.error('No Characteristic found');
             return;
         }
-
         setMessageData(base64.decode(characteristic?.value));
     };
 
@@ -193,7 +191,7 @@ export default function useBLE():BluetoothLowEnergyApi{
         DeviceInfo.getDeviceName()
         .then((value)=>{
             setDeviceInformation(value);
-        })
+        });
     };
 
     return {
@@ -205,5 +203,4 @@ export default function useBLE():BluetoothLowEnergyApi{
         getDeviceInfor,
         requestContactsPermissions  
     };
-    
 };
