@@ -3,6 +3,10 @@ import React from 'react';
 import { Device } from 'react-native-ble-plx';
 import {Contact} from 'react-native-contacts';
 
+// interface IAppContext = {
+//   isD
+// }
+
 export const AppContext=React.createContext();
 
 export const GlobalStateProvider=({children})=>{

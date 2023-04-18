@@ -4,7 +4,8 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Image } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as Animatable from 'react-native-animatable';
 const{height,width} = Dimensions.get('screen');
 
 const SliderComponent = ({data}) => {
@@ -14,13 +15,14 @@ const SliderComponent = ({data}) => {
     <View 
     style={[styles.container,{height:height,width:width}]}
      className=''>
-        <View className='w-[350px] h-[350px]'>
+        <Animatable.View animation={'pulse'} easing={'ease-in'} iterationCount={'infinite'} 
+        className='w-[350px] h-[350px]'>
             <Image 
               source={{uri:item.image}}
               resizeMode='contain'
               className='w-full h-full object-contain'
             />
-        </View>
+        </Animatable.View>
         <Text className=' text-[#3c5a7d] text-center text-[20px] font-medium'>{item.title}  <MaterialCommunityIcons name={item.iconName} size={20} color='#3c5a7d'/></Text>
       <Text className='text-[16px] text-[#3c5a7d] px-5'>{item.description}</Text>
     </View>

@@ -10,7 +10,7 @@
 /* eslint-disable prettier/prettier */
 import React,{useState} from 'react';
 import { openDatabase,enablePromise,SQLiteDatabase} from 'react-native-sqlite-storage';
-import { ContactsModel } from './Model';
+import { ContactsModel,PermissionModel} from './Model';
 import { ToastAndroid } from 'react-native';
 
 
@@ -48,6 +48,101 @@ export const creatTable = async (table: string, query: string) => {
     }
 
 };
+
+// create permision table
+export const creatPermissionTable = async (table: string, query: string) => {
+    try {
+        (await db).transaction(tx => {
+            tx.executeSql(
+                `CREATE TABLE IF NOT EXISTS ${table}(
+                    permissionID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    permissionName VARCHAR(20),
+                    permissionState BOOLEAN
+
+                    )`,
+                [],
+                () => {
+                    console.log(`${table}` + ' ' + 'permission table created successfully');
+                },
+                (error) => {
+                    console.log(`${table}` + ' ' + 'permission table failed to be created' + ' ' + error);
+                }
+            );
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// save permisions
+export const SavePermissionsToDatabse=async(table:string,data:PermissionModel,query:string)=>{
+    try {
+        (await db).transaction(tx =>{
+            tx.executeSql(
+                `INSERT INTO ${table}(permissionName,permissionState) VALUES(?,?)`,
+                [data.permissionName,data.permisionState],
+                ()=>{
+                    console.log(`${table}` + ' ' + 'table inserted with data successfully');
+                },
+                (error)=>{
+                    console.log(`${table}` + ' ' + 'table failed to be inserted with data' + ' ' + error);
+                }
+            );
+        });
+ 
+    } catch (error) {
+    
+    };
+};
+
+// get permissions from database
+export const GetPermissionsFromDatabse=async(table:string,query:string):Promise <PermissionModel[]>=>{
+    const DB:SQLiteDatabase=await db;
+
+    let Data:PermissionModel[]=[];
+    try {
+        const results= await DB.executeSql(`SELECT * FROM ${table} ORDER BY permissionID DESC LIMIT 5`);
+        if(results.length>0){
+            results.forEach((value)=>{
+
+                for(let index=0; index<value.rows.length;index++){
+                    Data.push(value.rows.item(index));
+                }
+            });
+
+        }else{
+            console.log('failed to Retrieve Data Successfully');
+        }
+
+    } catch (error) {
+        
+    }
+
+    return Data;
+};
+
+// update permisions
+export const UpdatePermissionsFromDatabse=async(table:string,data:PermissionModel,query:string)=>{
+     
+    try {
+        (await db).transaction(tx =>{
+                tx.executeSql(
+                    `UPDATE ${table} SET permissionState=? WHERE permissionID=?`,
+                    [data.permisionState,data.permissionID],
+                    ()=>{
+                        console.log(`${table}` + ' ' + 'table updated successfully');
+                    },
+                    (error)=>{
+                        console.log(`${table}` + ' ' + 'table failed to be updated' + ' ' + error);
+                    }
+                );
+        });
+    } catch (error) {
+    
+    };
+};
+
 
 //save into table
 export const SaveToDatabse=async(table:string,data:ContactsModel,query:string)=>{
@@ -96,6 +191,32 @@ export const GetFromDatabse=async(table:string,query:string):Promise <ContactsMo
 
     return Data;
 };
+
+export const RetrieveSinglePermissionFromDatabse=async(table:string,query:string,permissionName:string):Promise <PermissionModel[]>=>{
+    const DB:SQLiteDatabase=await db;
+
+    let Data:PermissionModel[]=[];
+    try {
+        const results= await DB.executeSql(`SELECT * FROM ${table} WHERE permissionName=?`,[permissionName]);
+        if(results.length>0){
+            results.forEach((value)=>{
+
+                for(let index=0; index<value.rows.length;index++){
+                    Data.push(value.rows.item(index));
+                }
+            });
+
+        }else{
+            console.log('failed to Retrieve Data Successfully');
+        }
+
+    } catch (error) {
+        
+    }
+
+    return Data;
+};
+
 
 // retrieve single contact from database
 // retrieve data from databse
@@ -170,5 +291,16 @@ export const dropTable=async(table:string,query:string)=>{
 
 
 
-export default {creatTable,deleteItemFromDatabase,SaveToDatabse,GetFromDatabse,dropTable,RetrieveSingleContactFromDatabse};
+export default {creatTable,
+    deleteItemFromDatabase,
+    SaveToDatabse,
+    GetFromDatabse,
+    dropTable,
+    RetrieveSingleContactFromDatabse,
+    creatPermissionTable,
+    UpdatePermissionsFromDatabse,
+    SavePermissionsToDatabse,
+    GetPermissionsFromDatabse,
+    RetrieveSinglePermissionFromDatabse,
+};
 

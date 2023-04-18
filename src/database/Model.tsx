@@ -7,3 +7,10 @@ export type ContactsModel = {
     contactPriority:boolean,
     createdAt:string,
 };
+
+// permission model
+export type PermissionModel={
+    permissionID:number,
+    permissionName:string,
+    permisionState:boolean,
+};

@@ -12,32 +12,36 @@ import { Alert,StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList
 import {Contact, getAll} from 'react-native-contacts';
 import { AppContext } from '../../../global/GlobalState';
 import SingleContactComponent from './SingleContactComponent';
+import { PermissionModel} from '../../database/Model';
+import {GetPermissionsFromDatabse} from '../../database/SQLite_DB';
 
 const AllUserContactsScreen = ({navigation}) => {
   // context states
   const {
     contactsPermission
   } = React.useContext(AppContext);
-
   const[allUserContacts,setAllUserContacts]=useState<Contact[]>([]);
 
   useEffect(()=>{
     // read and update all contacts
-    getAll()
-    .then((contacts)=>{
-      if(contactsPermission){
-        setAllUserContacts(contacts);
-      };
-    })
-    .catch((e)=>{
-      Alert.alert('Warning!', e.message());
-    });
-
+      getAll()
+        .then((contacts) => {
+          if(contactsPermission){
+          setAllUserContacts(contacts);
+          }
+        })
+        .catch((e) => {
+          Alert.alert('Warning!', e.message());
+        });
+    
   },[]);
 
   const getItem=(_data, index)=>{
     return _data[index];
   };
+
+  
+  console.log(contactsPermission);
 
   console.log("data\t"+JSON.stringify(allUserContacts));
 

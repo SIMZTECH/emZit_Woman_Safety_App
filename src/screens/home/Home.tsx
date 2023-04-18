@@ -95,8 +95,8 @@ import useBLE from '../../useBLe';
           <Text className='b mb-4 bg-[#f00100] px-2 items-center rounded-sm text-white mt-2 font-medium shadow-md'>{messageData}</Text>
 
 
-          <Text className="b text-[20px] font-semibold text-black">Not sure what to do?</Text>
-          <Text className="b text-[14px] text-[#b4b7c2] mt-2">Read the guide</Text>
+          <Text className="text-[20px] font-semibold text-black">Not sure what to do?</Text>
+          <Text className="text-[14px] text-[#b4b7c2] mt-2">Read the guide</Text>
         </View>
 
         <View className='px-2 flex-row justify-between mt-10'
