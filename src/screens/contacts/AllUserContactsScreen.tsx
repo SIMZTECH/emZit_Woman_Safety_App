@@ -10,38 +10,58 @@
 import React, { useCallback, useEffect, useState} from 'react';
 import { Alert,StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList} from 'react-native';
 import {Contact, getAll} from 'react-native-contacts';
-import { AppContext } from '../../../global/GlobalState';
 import SingleContactComponent from './SingleContactComponent';
 import { PermissionModel} from '../../database/Model';
-import {GetPermissionsFromDatabse} from '../../database/SQLite_DB';
+import {SavePermissionsToDatabse,RetrieveSinglePermissionFromDatabse,UpdatePermissionsFromDatabse} from '../../database/SQLite_DB';
+import useBLE from '../../useBLe';
 
 const AllUserContactsScreen = ({navigation}) => {
-  // context states
-  const {
-    contactsPermission
-  } = React.useContext(AppContext);
+  const {requestContactsPermissions,requestPermissions} = useBLE();
+  const [contactPermission,setContactPermission]=useState<boolean>(false);
+ 
   const[allUserContacts,setAllUserContacts]=useState<Contact[]>([]);
 
-  useEffect(()=>{
-    // read and update all contacts
-      getAll()
-        .then((contacts) => {
-          if(contactsPermission){
-          setAllUserContacts(contacts);
-          }
-        })
-        .catch((e) => {
-          Alert.alert('Warning!', e.message());
+  useEffect(() => {
+    // get permissions
+    requestContactsPermissions((granted: boolean) => {
+      setContactPermission(granted);
+      const permission_name = 'contactsPermission';
+      RetrieveSinglePermissionFromDatabse('permissions', '', permission_name)
+        .then((value) => {
+          console.log(value);
+          const data: PermissionModel = {
+            permissionName: permission_name,
+            permissionState: granted,
+            permissionID: (value.length > 0) ? value[0].permissionID : 0,
+          };
+          if (value.length > 0) {
+            UpdatePermissionsFromDatabse('permissions', data, '');
+          } else {
+            SavePermissionsToDatabse('permissions', data, '');
+          };
+
+
+          getAll()
+            .then((contacts) => {
+              if (granted) {
+                setAllUserContacts(contacts);
+              }else{
+                return;
+              }
+            })
+            .catch((e) => {
+              Alert.alert('Warning!', e.message());
+            });
         });
-    
-  },[]);
+
+    });
+  }, []);
 
   const getItem=(_data, index)=>{
     return _data[index];
   };
-
   
-  console.log(contactsPermission);
+  console.log(contactPermission);
 
   console.log("data\t"+JSON.stringify(allUserContacts));
 
@@ -55,6 +75,7 @@ const AllUserContactsScreen = ({navigation}) => {
             getItemCount={(data)=>data.length}
             keyExtractor={(contact:Contact)=>contact.recordID}
             getItem={getItem}
+            refreshing={true}
           />
 
         ) : (
@@ -71,4 +92,3 @@ const AllUserContactsScreen = ({navigation}) => {
 export default AllUserContactsScreen;
 
 const styles = StyleSheet.create({});
-

@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState,useRef, useEffect, useCallback } from 'react';
+import React, { useState,useRef} from 'react';
 import { Image } from 'react-native';
 import {heartRate} from '../../assets/imgaes/UIDesign/OtherImages';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -15,18 +15,10 @@ import { FlatList } from 'react-native-gesture-handler';
 import SliderData from '../../assets/SliderData';
 import SliderComponent from './SliderComponent';
 import Pagination from './Pagination';
-import { PermissionModel } from '../database/Model';
-import useBLE from '../useBLe';
-import { AppContext } from '../../global/GlobalState';
-import {SavePermissionsToDatabse,RetrieveSinglePermissionFromDatabse,UpdatePermissionsFromDatabse} from '../database/SQLite_DB';
 
 const {height,width} = Dimensions.get('screen');
 
-
 const SliderScreen = ({navigation}) => {
-    const {requestContactsPermissions,requestPermissions} = useBLE();
-    const {setContactsPermission}=React.useContext(AppContext);
-
     const[sliderIndex,setSliderIndex]=useState<number>(0);
     
     const handleOnViewableChange=useRef((viewableItems)=>{
@@ -38,33 +30,6 @@ const SliderScreen = ({navigation}) => {
     const viewableConfig=useRef({
         itemVisiblePercentThreshold:70,
     }).current;
-
-    useEffect(() => {
-
-        // handle permissions from here
-        requestContactsPermissions((granted:boolean)=>{
-            const permission_name='contactsPermission';
-           
-            RetrieveSinglePermissionFromDatabse('permissions','',permission_name)
-            .then((value)=>{
-                // console.log(value);
-                const data:PermissionModel={
-                    permissionName:permission_name,
-                    permisionState:granted,
-                    permissionID:(value.length>0)?value[0].permissionID:0,
-                };
-
-                if(value.length>0){
-                    UpdatePermissionsFromDatabse('permissions',data,'');
-                    setContactsPermission(granted);
-                }else{
-                    SavePermissionsToDatabse('permissions',data,'');
-                    setContactsPermission(granted);
-                };
-            });  
-        });
-
-    },[]);
 
   return (
     <View

@@ -12,5 +12,5 @@ export type ContactsModel = {
 export type PermissionModel={
     permissionID:number,
     permissionName:string,
-    permisionState:boolean,
+    permissionState:boolean,
 };

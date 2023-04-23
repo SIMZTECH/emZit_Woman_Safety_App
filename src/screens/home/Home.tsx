@@ -51,11 +51,13 @@ import useBLE from '../../useBLe';
     useEffect(() => {
       DeviceInformation();
 
-    },[DeviceInformation]);
+    },[DeviceInformation,messageData]);
 
     const handleOnPressConnect = ()=>{
       navigation.navigate('BlueToothScreen');
     };
+
+    
 
     return (
       <SafeAreaView

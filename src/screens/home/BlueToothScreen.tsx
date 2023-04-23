@@ -62,10 +62,6 @@ const BlueToothScreen = () => {
     scanCallBack();
      
     }, [availableBluetoothDevices, requestPermissions, SetBluetoothPermission, scanCallBack]);
-
-    
-     
-
     
     // console.log("Set:\t"+bluetoothPermission);
    if(availableBluetoothDevices?.length>0){

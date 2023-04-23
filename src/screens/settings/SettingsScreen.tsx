@@ -1,3 +1,4 @@
+/* eslint-disable space-infix-ops */
 /* eslint-disable prettier/prettier */
 import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
@@ -6,8 +7,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { AppContext } from '../../../global/GlobalState';
-import {GetPermissionsFromDatabse} from '../../database/SQLite_DB';
-import { PermissionModel } from '../../database/Model';
+import {GetPermissionsFromDatabse,UpdatePermissionsFromDatabse} from '../../database/SQLite_DB';
+import {PermissionModel } from '../../database/Model';
 
 const SettingsScreen = () => {
   const[retrivedPermissions,setRetrievedPermissions]=React.useState<PermissionModel[]>([]);
@@ -16,11 +17,6 @@ const SettingsScreen = () => {
   const[toggleRight,setToggleRight]=useState<number>(6);
   const[toggleleftContactPermission,setToggleLeftContactPermission]=useState<number>(0);
   const[toggleRightContactPermission,setToggleRightContactPermission]=useState<number>(6);
-
-  const {
-    contactsPermission,
-    bluetoothPermission,
-  } = React.useContext(AppContext);
 
   useLayoutEffect(()=>{
     Navigation.setOptions({
@@ -34,48 +30,51 @@ const SettingsScreen = () => {
     GetPermissionsFromDatabse('permissions','')
     .then((value)=>{
       setRetrievedPermissions(value);
-      
     });
-  },[]);
+  },[setRetrievedPermissions]);
 
   const searchPermision=(_permissionName:string)=>{
     const data=retrivedPermissions.find((value)=>value.permissionName===_permissionName);
-    return (data?.permissionID===1)?true:false;
+    console.log(data)
+    return (data.permissionState===1)?true:false;
+  };
+
+  const UpdatePermission=(_permissionName:string)=>{
+
+    const data=retrivedPermissions.find((value)=>value.permissionName===_permissionName);
+
+     const _dataForModification:PermissionModel={
+      permissionID:(data)? data.permissionID:0,
+      permissionName:_permissionName,
+      permissionState:(data.permissionState===1)?false:true,
+     };
+    // update dpermision db
+    UpdatePermissionsFromDatabse('permissions', _dataForModification,'');
+    getPermissionsFromDb();
+
+    console.log(_dataForModification);
   };
 
   useEffect(()=>{
 
     getPermissionsFromDb();
 
-
   },[getPermissionsFromDb]);
 
   const handleToggleBtnBluetoothPermission=()=>{
-    // if(){
 
-
-    // }else{
-
-    // }
-    
   };
 
   const handleToggleBtnContactPermission=()=>{
-    if(searchPermision('contactsPermission')==1){
-      //update database
-
-      Alert.alert('Warning!','you want to disable this feature?');
-      setToggleRightContactPermission(0);
-    }else{
-
-      //update database
-      Alert.alert('Warning!','you want to enable this feature?');
-      setToggleRightContactPermission(6);
-    }
+    Alert.alert(
+      'Warning!!',
+      `${searchPermision('contactsPermission')?'Are you sure you want to disable permission':'Are you sure you want to enable permission'}`,
+      [
+        {text:'ok', onPress:()=>UpdatePermission('contactsPermission')},
+        {text:'cancel',onPress:()=>{return}}
+      ]
+    );
   };
-
-  // console.log(retrivedPermissions);
-
 
   return (
     <View className='px-5 pt-8 bg-white flex-1'>

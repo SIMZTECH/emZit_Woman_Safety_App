@@ -81,7 +81,7 @@ export const SavePermissionsToDatabse=async(table:string,data:PermissionModel,qu
         (await db).transaction(tx =>{
             tx.executeSql(
                 `INSERT INTO ${table}(permissionName,permissionState) VALUES(?,?)`,
-                [data.permissionName,data.permisionState],
+                [data.permissionName,data.permissionState],
                 ()=>{
                     console.log(`${table}` + ' ' + 'table inserted with data successfully');
                 },
@@ -129,7 +129,7 @@ export const UpdatePermissionsFromDatabse=async(table:string,data:PermissionMode
         (await db).transaction(tx =>{
                 tx.executeSql(
                     `UPDATE ${table} SET permissionState=? WHERE permissionID=?`,
-                    [data.permisionState,data.permissionID],
+                    [data.permissionState,data.permissionID],
                     ()=>{
                         console.log(`${table}` + ' ' + 'table updated successfully');
                     },

@@ -16,9 +16,6 @@ const PrioritySingleContact:React.FC<ContactDataProps> = ({data}) => {
     // delete contact
    deleteItemFromDatabase('contacts',data.contactID,'');
     console.log(data);
-    // if(){
-
-    // }
   };
 
   return (
@@ -28,7 +25,7 @@ const PrioritySingleContact:React.FC<ContactDataProps> = ({data}) => {
           <Image source={other} className='w-full h-full' resizeMode='contain' />
         </View>
         <View className='b space-y-1 flex-1'>
-          <View className='flex-row items-center space-x-7'>
+          <View className='flex-row items-center space-x-2'>
             <Text className='b text-[16px] font-normal'>{data.contactName} </Text>
             <View className='b flex-row space-x-2'>
               <Text  className='b text-[16px] font-normal'>Priority</Text>

@@ -49,15 +49,7 @@ export default function useBLE():BluetoothLowEnergyApi{
     const requestPermissions = async(callback:PermissionCallback)=>{
         if(Platform.OS==='android'){
             const grantedStatus=await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                {
-                    title:'Location Permission',
-                    message:'Bluetooth Low Energy Needs Location Permission',
-                    buttonNegative:'cancel',
-                    buttonPositive:'ok',
-                    buttonNeutral:'Maybe Later'
-                }
-            );
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
             callback(grantedStatus === PermissionsAndroid.RESULTS.GRANTED);
 
             console.log(grantedStatus);
@@ -69,22 +61,11 @@ export default function useBLE():BluetoothLowEnergyApi{
     const requestContactsPermissions=async(callback:PermissionCallback)=>{
         if(Platform.OS==='android'){
             const grantedStatus=await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                  'title': 'Contacts',
-                  'message': 'This app would like to view your contacts.',
-                  'buttonNegative':'cancel',
-                  'buttonPositive':'ok',
-                  'buttonNeutral':'Maybe Later'
-                }
-              );
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS);
             callback(grantedStatus === PermissionsAndroid.RESULTS.GRANTED);
-
-            console.log("contact\t"+grantedStatus);
         }else{
             callback(true);
         }
-
     };//end of request permission method
 
     // check for duplicates
@@ -184,6 +165,10 @@ export default function useBLE():BluetoothLowEnergyApi{
             return;
         }
         setMessageData(base64.decode(characteristic?.value));
+        // const decodedValue=base64.decode(characteristic?.value);
+        console.log(base64.decode(characteristic?.value));
+
+        // console.log(parseFloat(decodedValue));
     };
 
     //read the phones devices
