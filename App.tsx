@@ -9,9 +9,14 @@ import 'react-native-gesture-handler';
 import { creatTable, dropTable,creatPermissionTable} from './src/database/SQLite_DB';
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
 import MainRouteNavigation from './src/navigations/MainRouteNavigation';
+import {enableLatestRenderer} from 'react-native-maps';
+
+
+
 
 
 const App = () => {
+  // enableLatestRenderer();
 
   const tableCreation=useCallback(()=>{
     

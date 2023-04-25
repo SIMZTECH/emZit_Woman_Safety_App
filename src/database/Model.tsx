@@ -14,3 +14,16 @@ export type PermissionModel={
     permissionName:string,
     permissionState:boolean,
 };
+
+
+export type GeolocationModel={
+    latitude:number,
+    longitude:number,
+    latitudeDelta:number,
+    longitudeDelta:number,
+    accuracy:number,
+    altitude:number,
+    heading:number,
+    isFromMockProvider:boolean,
+    timestamp:number
+};
