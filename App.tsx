@@ -10,9 +10,9 @@ import { creatTable, dropTable,creatPermissionTable} from './src/database/SQLite
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
 import MainRouteNavigation from './src/navigations/MainRouteNavigation';
 import {enableLatestRenderer} from 'react-native-maps';
-
-
-
+import { enableScreens } from 'react-native-screens';
+import SMS from './src/screens/smsTesting/SMS';
+enableScreens(false);
 
 
 const App = () => {
@@ -37,6 +37,7 @@ const App = () => {
        <NavigationContainer>
           <MainRouteNavigation />
       </NavigationContainer>
+      {/* <SMS /> */}
     </GlobalStateProvider>
       
   );

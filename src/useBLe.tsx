@@ -68,6 +68,16 @@ export default function useBLE():BluetoothLowEnergyApi{
         }
     };//end of request permission method
 
+    const requestSMSPermissions=async(callback:PermissionCallback)=>{
+        if(Platform.OS==='android'){
+            const grantedStatus=await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.SEND_SMS);
+            callback(grantedStatus === PermissionsAndroid.RESULTS.GRANTED);
+        }else{
+            callback(true);
+        }
+    };//end of request SMS permission method
+
     // check for duplicates
     const isDuplicateDevice=(devices:Device[],nextDevice:Device)=>{
         if(availableBluetoothDevices){

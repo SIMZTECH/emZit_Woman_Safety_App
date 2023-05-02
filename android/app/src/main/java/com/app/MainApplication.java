@@ -3,6 +3,7 @@ package com.app;
 // added manually
 import com.reactnativecommunity.art.ARTPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import com.app.MySendSmsPackage;
 // import com.github.reactnativecommunity.location.RNLocationPackage;
 
 import android.app.Application;
@@ -14,6 +15,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -31,10 +33,12 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
 
-          packages.add(
+          packages.add( 
             new ARTPackage()
             // new ReactNativeContacts()
             );
+          
+          packages.add(new MySendSmsPackage());
 
           return packages;
         }
