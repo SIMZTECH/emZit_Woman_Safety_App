@@ -3,9 +3,22 @@ import React from 'react';
 import { Device } from 'react-native-ble-plx';
 import {Contact} from 'react-native-contacts';
 
-// interface IAppContext = {
-//   isD
-// }
+type contextStates={
+  isDeviceConnected:Boolean,
+  userData:any,
+  totalUserContacts:number,
+  locationPermission:Boolean,
+  contactsPermission:Boolean,
+  locationCoordination:any,
+  bluetoothPermission:Boolean,
+  connectedDevice:Device,
+  availableBluetoothDevices:Device[],
+  messageData:string,
+  singleContactDetails:Contact[],
+  deviceInformation:any,
+  smsPermissions:Boolean,
+
+};
 
 export const AppContext=React.createContext();
 
@@ -13,10 +26,11 @@ export const GlobalStateProvider=({children})=>{
     const [isDeviceConnected,setIsDeviceConnected]= React.useState<Boolean>(false);
     const [userData,setUserData]= React.useState([]);
     const [totalUserContacts,setTotalUserContacts]= React.useState<number>(0);
-    const [locationPermission,SetLocationPermission]= React.useState<Boolean>(false);
+    const [locationPermission,setLocationPermission]= React.useState<Boolean>(false);
     const [contactsPermission,setContactsPermission]= React.useState<Boolean>(false);
     const [locationCoordination,SetLocationCoordination]= React.useState(null);
     const [bluetoothPermission,SetBluetoothPermission]= React.useState<Boolean>(false);
+    const [smsPermissions,setSmsPermissions]= React.useState<Boolean>(false);
     const [connectedDevice,setConnectedDevice] = React.useState<Device>();
     const [availableBluetoothDevices,setAvailableBluetoothDevices] = React.useState<Device[]>([]);
     const [messageData,setMessageData] = React.useState<string>("nothing");
@@ -29,7 +43,7 @@ export const GlobalStateProvider=({children})=>{
         isDeviceConnected,setIsDeviceConnected,
         userData,setUserData,
         totalUserContacts,setTotalUserContacts,
-        locationPermission,SetLocationPermission,
+        locationPermission,setLocationPermission,
         bluetoothPermission,SetBluetoothPermission,
         connectedDevice,setConnectedDevice,
         availableBluetoothDevices,setAvailableBluetoothDevices,
@@ -38,7 +52,8 @@ export const GlobalStateProvider=({children})=>{
         boxValue,setBoxValue,
         deviceInformation,setDeviceInformation,
         contactsPermission,setContactsPermission,
-        singleContactDetails,setSingleContactDetails
+        singleContactDetails,setSingleContactDetails,
+        smsPermissions,setSmsPermissions
     }}>
       {children}
     </AppContext.Provider>

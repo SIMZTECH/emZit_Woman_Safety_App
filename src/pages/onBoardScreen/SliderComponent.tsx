@@ -8,7 +8,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import * as Animatable from 'react-native-animatable';
 const{height,width} = Dimensions.get('screen');
 
-const SliderComponent = ({data}) => {
+type propsTypes={
+  data:any
+};
+
+const SliderComponent = ({data}:propsTypes) => {
     const {item} = data;
 
   return (
@@ -24,7 +28,7 @@ const SliderComponent = ({data}) => {
             />
         </Animatable.View>
         <Text className=' text-[#3c5a7d] text-center text-[20px] font-medium'>{item.title}  <MaterialCommunityIcons name={item.iconName} size={20} color='#3c5a7d'/></Text>
-      <Text className='text-[16px] text-[#3c5a7d] px-5'>{item.description}</Text>
+      <Text className='text-[15px] text-[#3c5a7d] px-5 text-justify'>{item.description}</Text>
     </View>
   )
 }

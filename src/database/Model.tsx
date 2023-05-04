@@ -15,7 +15,6 @@ export type PermissionModel={
     permissionState:boolean,
 };
 
-
 export type GeolocationModel={
     latitude:number,
     longitude:number,

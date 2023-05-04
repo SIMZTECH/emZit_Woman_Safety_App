@@ -31,7 +31,6 @@ export const creatTable = async (table: string, query: string) => {
                         contactName VARCHAR(10),
                         contactPriority BOOLEAN,
                         createdAt TIMESTAMP CURRENT_TIMESTAMP
-
                     )`,
                 [],
                 () => {
@@ -58,7 +57,6 @@ export const creatPermissionTable = async (table: string, query: string) => {
                     permissionID INTEGER PRIMARY KEY AUTOINCREMENT,
                     permissionName VARCHAR(20),
                     permissionState BOOLEAN
-
                     )`,
                 [],
                 () => {

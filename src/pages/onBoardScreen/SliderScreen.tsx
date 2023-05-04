@@ -7,22 +7,31 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState,useRef} from 'react';
+import React, { useState,useRef, useEffect, useCallback} from 'react';
 import { Image } from 'react-native';
-import {heartRate} from '../../assets/imgaes/UIDesign/OtherImages';
+import {heartRate} from '../../../assets/imgaes/UIDesign/OtherImages';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { FlatList } from 'react-native-gesture-handler';
-import SliderData from '../../assets/SliderData';
-import SliderComponent from './SliderComponent';
-import Pagination from './Pagination';
+import {SliderData,SliderComponent,Pagination} from './index';
+import { AppContext } from '../../../global/GlobalState';
+import {GetPermissionsFromDatabse,RetrieveSinglePermissionFromDatabse,UpdatePermissionsFromDatabse,SavePermissionsToDatabse} from '../../database/SQLite_DB';
+import { PermissionModel } from '../../database/Model';
+import useBLE from '../../useBLe';
 
 const {height,width} = Dimensions.get('screen');
 
 const SliderScreen = ({navigation}) => {
+    const{requestContactsPermissions,requestLocationPermissions,requestSMSPermissions}=useBLE();
+
+    const { 
+        setSmsPermissions,smsPermissions,
+        setContactsPermission,contactsPermission,
+        setLocationPermission,locationPermission
+    }=React.useContext(AppContext);
+
     const[sliderIndex,setSliderIndex]=useState<number>(0);
-    
     const handleOnViewableChange=useRef((viewableItems)=>{
-        console.log(viewableItems.changed[0]);
+        // console.log(viewableItems.changed[0]);
         const {index} = viewableItems.changed[0]
         setSliderIndex(index);
     }).current;
@@ -30,6 +39,56 @@ const SliderScreen = ({navigation}) => {
     const viewableConfig=useRef({
         itemVisiblePercentThreshold:70,
     }).current;
+    const blueToothPermission=useCallback(async()=>{
+        requestLocationPermissions((permssionStatus:boolean)=>{
+            setLocationPermission(permssionStatus);
+            handlePermissionDBActivities("bluetoothPermission",permssionStatus);
+        });
+
+    },[requestLocationPermissions, setLocationPermission]);
+
+    const contactsPermissions=useCallback(async()=>{
+        requestContactsPermissions((permssionStatus:boolean)=>{
+            setContactsPermission(permssionStatus);
+            handlePermissionDBActivities("contactsPermissions",permssionStatus);
+        });
+    },[requestContactsPermissions, setContactsPermission]);
+
+    const smsPermission=useCallback(async()=>{
+        requestSMSPermissions((permssionStatus:boolean)=>{
+            setSmsPermissions(permssionStatus);
+            handlePermissionDBActivities("smsPermission",permssionStatus);
+        })
+    },[requestSMSPermissions, setSmsPermissions]);
+
+    const handlePermissionDBActivities=(_permission:string,permissionStatus:boolean)=>{
+        RetrieveSinglePermissionFromDatabse("permissions",'',_permission)
+        .then((res)=>{
+            const data:PermissionModel={
+                permissionID: 0,
+                permissionName:_permission,
+                permissionState:permissionStatus,
+            };
+            if(res.length>0){
+                UpdatePermissionsFromDatabse('permissions',data,'');
+            }else{
+                SavePermissionsToDatabse('permissions',data,'');
+            }
+        });
+    };
+
+    useEffect(()=>{
+        // request permissions
+        contactsPermissions();
+        smsPermission();
+        blueToothPermission();
+    },[blueToothPermission, contactsPermissions, smsPermission]);
+
+    GetPermissionsFromDatabse("permissions",'')
+    .then((valenc)=>{
+        console.log(valenc);
+    });
+
 
   return (
     <View
@@ -41,7 +100,9 @@ const SliderScreen = ({navigation}) => {
                 <TouchableOpacity
                 onPress={()=>navigation.navigate('DrawerNavigation')}
                 >
-                    <Text className='text-[#f00100] font-normal text-[15px]'>SKIP</Text>
+                
+                {(smsPermissions && contactsPermission && locationPermission) && <Text className='text-[#f00100] font-normal text-[15px]'>SKIP</Text>}
+                    
                 </TouchableOpacity>
             </View>
             <View

@@ -18,28 +18,28 @@ enableScreens(false);
 const App = () => {
   // enableLatestRenderer();
 
-  const tableCreation=useCallback(()=>{
-    
-    creatTable('contacts','');
-    creatPermissionTable('permissions','');
+  const tableCreation = useCallback(() => {
 
-  },[]);
+    creatTable('contacts', '');
+    creatPermissionTable('permissions', '');
 
-  useEffect(()=>{
+  }, []);
+
+  useEffect(() => {
 
     tableCreation();
     // dropTable('contacts','');
     // dropTable('permissions','');
-  },[tableCreation]);
+  }, [tableCreation]);
 
   return (
     <GlobalStateProvider>
-       <NavigationContainer>
-          <MainRouteNavigation />
+      <NavigationContainer>
+        <MainRouteNavigation />
       </NavigationContainer>
       {/* <SMS /> */}
     </GlobalStateProvider>
-      
+
   );
 };
 

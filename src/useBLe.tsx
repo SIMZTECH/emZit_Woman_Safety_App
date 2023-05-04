@@ -22,8 +22,9 @@ type PermissionCallback=(result:boolean)=>void;
 const bleManager=new BleManager();
 
 interface BluetoothLowEnergyApi{
-    requestPermissions(callback:PermissionCallback):Promise<void>;
+    requestLocationPermissions(callback:PermissionCallback):Promise<void>;
     requestContactsPermissions(callback:PermissionCallback):Promise<void>;
+    requestSMSPermissions(callback:PermissionCallback):Promise<void>;
     connectToDevice(device:Device):Promise<void>;
     scanForDevices():void;
     bluetoothDeviceServices(periperial:Device):void;
@@ -43,10 +44,11 @@ export default function useBLE():BluetoothLowEnergyApi{
         availableBluetoothDevices,
         setAvailableBluetoothDevices,
         setDeviceInformation,
+        setSmsPermissions
     }=useContext(AppContext);
 
     // request permissions method
-    const requestPermissions = async(callback:PermissionCallback)=>{
+    const requestLocationPermissions = async(callback:PermissionCallback)=>{
         if(Platform.OS==='android'){
             const grantedStatus=await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
@@ -190,12 +192,13 @@ export default function useBLE():BluetoothLowEnergyApi{
     };
 
     return {
-        requestPermissions,
+        requestLocationPermissions,
         scanForDevices,
         connectToDevice,
         allDevices,
         bluetoothDeviceServices,
         getDeviceInfor,
-        requestContactsPermissions  
+        requestContactsPermissions,
+        requestSMSPermissions
     };
 };

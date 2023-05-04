@@ -3,7 +3,13 @@
 import { StyleSheet,View } from 'react-native'
 import React from 'react';
 
-const Pagination = ({sliderIndex,loopIndex}) => {
+type propsTypes={
+  sliderIndex:number,
+  loopIndex:number
+};
+
+
+const Pagination = ({sliderIndex,loopIndex}:propsTypes) => {
   return (
     <View className={`w-2 h-2  ${sliderIndex==loopIndex?'bg-[#f00100]':'bg-[#3c5a7d]'} rounded-sm mx-1`}>
       
