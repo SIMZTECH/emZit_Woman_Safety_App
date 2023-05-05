@@ -12,6 +12,7 @@ import MainRouteNavigation from './src/navigations/MainRouteNavigation';
 import {enableLatestRenderer} from 'react-native-maps';
 import { enableScreens } from 'react-native-screens';
 import SMS from './src/screens/smsTesting/SMS';
+import SplashScreen from 'react-native-splash-screen';
 enableScreens(false);
 
 
@@ -30,6 +31,10 @@ const App = () => {
     tableCreation();
     // dropTable('contacts','');
     // dropTable('permissions','');
+
+    setTimeout(() => {
+      SplashScreen.hide();
+    },2000);
   }, [tableCreation]);
 
   return (

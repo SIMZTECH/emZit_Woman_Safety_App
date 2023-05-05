@@ -25,7 +25,7 @@ const handleRemoveLoader=(status:Boolean, time:number,method:Function)=>{
   }
 
 const BlueToothScreen = () => {
-    const{requestPermissions,connectToDevice,scanForDevices,bluetoothDeviceServices,getDeviceInfor}=useBLE();
+    const{requestLocationPermissions,scanForDevices,bluetoothDeviceServices}=useBLE();
 
     const [internalLoader,setInternalLoader]= useState<Boolean>(false);
     const [mainlLoader,setMainLoader]= useState<Boolean>(true);
@@ -42,33 +42,29 @@ const BlueToothScreen = () => {
         Navigation.setOptions({
             headerShown:false,
         })
-
     });
 
     const scanCallBack=useCallback(()=>{
         scanForDevices();
-        
     },[scanForDevices]);
 
-    useEffect(()=>{
+    useEffect(() => {
 
         // request permission
-       requestPermissions((isGranted:boolean)=>{
-        SetBluetoothPermission(isGranted);
-       });
+        requestLocationPermissions((isGranted: boolean) => {
+            SetBluetoothPermission(isGranted);
+        });
 
-    
-    // scan for devices
-    scanCallBack();
-     
-    }, [availableBluetoothDevices, requestPermissions, SetBluetoothPermission, scanCallBack]);
+        // scan for devices
+        scanCallBack();
+    }, [SetBluetoothPermission, requestLocationPermissions, scanCallBack]);
     
     // console.log("Set:\t"+bluetoothPermission);
-   if(availableBluetoothDevices?.length>0){
-    console.log("set:\t"+availableBluetoothDevices[0].id +"\t"+availableBluetoothDevices[0].name);
-   }else{
+    if (availableBluetoothDevices?.length > 0) {
+        console.log("set:\t" + availableBluetoothDevices[0].id + "\t" + availableBluetoothDevices[0].name);
+    } else {
 
-   };
+    };
 
    console.log(deviceInformation);
 
@@ -93,29 +89,25 @@ const BlueToothScreen = () => {
               <View className="flex-row justify-between pr-4 mt-3">
                   <Text className="text-[#f00100] text-[16px] font-medium">Available devices</Text>
                   <View>
-                    {mainlLoader?(
-                        <ActivityIndicator size={24} color={'#f00100'}/>
-                        ):(
-                         <Ionicons color={'#f00100'} size={24} name="refresh"/>
-                        )
-                    }
+                      {mainlLoader ? (
+                          <ActivityIndicator size={24} color={'#f00100'} />
+                      ) : (
+                          <Ionicons color={'#f00100'} size={24} name="refresh" />
+                      )
+                      }
                   </View>
               </View>
-
-
               <View className="mt-3 flex-[50%] pb-3">
-                {(availableBluetoothDevices?.length>0)?(
+                  {(availableBluetoothDevices?.length > 0)?(
                       <Pressable
                           onPress={async () => {
-                                bluetoothDeviceServices(availableBluetoothDevices[0]);
+                              bluetoothDeviceServices(availableBluetoothDevices[0]);
                               if (isDeviceConnected) {
                                   setInternalLoader(true);
-
                               } else {
                                   setInternalLoader(true);
                               }
                               handleRemoveLoader(false, 2000, setInternalLoader);
-
                           }}>
                           <BlueToothDevice
                               bleStatus={isDeviceConnected}
@@ -124,15 +116,10 @@ const BlueToothScreen = () => {
                               key={availableBluetoothDevices[0].id}
                           />
                       </Pressable>
-
-
-                    ):(
-
-                        <Text className="mt-10"> NO AVAILABLE DEVICES </Text>
-                    )
-
-                }
-                  
+                  ) : (
+                      <Text className="mt-10"> NO AVAILABLE DEVICES </Text>
+                  )
+                  }
               </View>
 
               <View className="flex-row space-x-4">
@@ -143,10 +130,8 @@ const BlueToothScreen = () => {
                       nearby Bluetooth devices.
                   </Text>
               </View>
-
           </View>
-
-        </SafeAreaView>
+      </SafeAreaView>
   )
 }
 
