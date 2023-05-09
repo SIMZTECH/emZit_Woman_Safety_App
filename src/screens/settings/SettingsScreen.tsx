@@ -1,16 +1,15 @@
 /* eslint-disable space-infix-ops */
 /* eslint-disable prettier/prettier */
-import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View,ScrollView} from 'react-native';
+import { ActivityIndicator, Alert,StyleSheet, Text, View,ScrollView} from 'react-native';
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import { AppContext } from '../../../global/GlobalState';
 import {GetPermissionsFromDatabse,UpdatePermissionsFromDatabse} from '../../database/SQLite_DB';
 import {PermissionModel } from '../../database/Model';
 import SingUp_Login_Button from './SingUp_Login_Button';
-import Permissions_Button from '../home/Permissions_Button';
+import Permissions_Button from './Permissions_Button';
+import Links_Button from './Links_Button';
 
 const SettingsScreen = () => {
   const[retrivedPermissions,setRetrievedPermissions]=React.useState<PermissionModel[]>([]);
@@ -62,21 +61,6 @@ const SettingsScreen = () => {
     getPermissionsFromDb();
 
   },[getPermissionsFromDb]);
-
-  const handleToggleBtnBluetoothPermission=()=>{
-
-  };
-
-  const handleToggleBtnContactPermission=()=>{
-    Alert.alert(
-      'Warning!!',
-      `${searchPermision('contactsPermission')?'Are you sure you want to disable permission':'Are you sure you want to enable permission'}`,
-      [
-        {text:'ok', onPress:()=>UpdatePermission('contactsPermission')},
-        {text:'cancel',onPress:()=>{return}}
-      ]
-    );
-  };
 
   return (
     <ScrollView 
@@ -133,44 +117,68 @@ const SettingsScreen = () => {
 
           </View>
 
-          <View className=' space-y-2 mt-5'>
-            <Text className='text-[#ff6c6c] font-normal'>REPLACEMENTS</Text>
-            {/* Catch*/}
-            <View className='flex-row h-10 bg-[#eff2fa] rounded-md items-center'>
-              <View className='flex-row items-center pl-2 space-x-2 h-full'>
-                <FontAwesome5 name='heartbeat' size={20} color={'#ff6c6c'} />
-                <Text>Healthy replacement app </Text>
-              </View>
-              <View className='h-full flex items-end justify-center flex-1 pr-2'>
-                <Ionicons name='chevron-forward' size={20} color={'#ff6c6c'} />
-              </View>
-            </View>
+          <View
+          className='b mt-5'>
+          
+              <Links_Button 
+                title={'REPLACEMENTS'}
+                args={'other_apps'}
+                iconName={'heartbeat'}
+                iconLeftPresent={true}
+                text={'Healthy replacement app '}
+                iconLeftName={'chevron-forward'} 
+                operation={((args: String) => {
+                  console.log(args);
+                  Alert.alert("Warning!", "Redirecting to an External Source");
+                })} />
 
-          </View>
-          <View className=' space-y-2 mt-5'>
-            <Text className='text-[#ff6c6c] font-normal'>ADVANCED</Text>
-            <View className='flex-row h-10 bg-[#eff2fa] rounded-md items-center pl-2 space-x-2'>
-              <FontAwesome5 name='cloud-download-alt' size={20} color={'#ff6c6c'} />
-              <Text>Download user data</Text>
-            </View>
-          </View>
-          <View className=' space-y-2 mt-5'>
-            <Text className='text-[#ff6c6c] font-normal'>HELP</Text>
+              <Links_Button 
+                title={'ADVANCED'}
+                args={'advanced'}
+                iconName={'cloud-download-alt'}
+                iconLeftPresent={false}
+                text={'Download user data'}
+                iconLeftName={''}
+                operation={((args: String) => {
+                  console.log(args);
+                  Alert.alert("Warning!", "Redirecting to an External Source");
+                })}  />
 
-            <View className='flex-row h-10 bg-[#eff2fa] rounded-md items-center pl-2 space-x-2'>
-              <FontAwesome5 name='question-circle' size={20} color={'#ff6c6c'} />
-              <Text>FAQ</Text>
-            </View>
+              <Links_Button 
+                title={'HELP'}
+                args={'help'}
+                iconName={'question-circle'}
+                iconLeftPresent={false}
+                text={'FAQ'}
+                iconLeftName={''} 
+                operation={((args: String) => {
+                  console.log(args);
+                  Alert.alert("Warning!", "Redirecting to an External Source");
+                })} />
 
-            <View className='flex-row h-10 bg-[#eff2fa] rounded-md items-center pl-2 space-x-2'>
-              <FontAwesome5 name='envelope-open-text' size={20} color={'#ff6c6c'} />
-              <Text>Contact support</Text>
-            </View>
+            <Links_Button
+              title={''}
+              args={'support'}
+              iconName={'envelope-open-text'}
+              iconLeftPresent={false}
+              text={'Contact support'}
+              iconLeftName={''}
+              operation={((args: String) => {
+                console.log(args);
+                Alert.alert("Warning!", "Redirecting to an External Source");
+              })} />
 
-            <View className='flex-row h-10 bg-[#eff2fa] rounded-md items-center pl-2 space-x-2'>
-              <FontAwesome5 name='lock' size={20} color={'#ff6c6c'} />
-              <Text>Our privacy policy </Text>
-            </View>
+            <Links_Button
+              title={''}
+              args={'policy'}
+              iconName={'lock'}
+              iconLeftPresent={false}
+              text={'Our privacy policy'}
+              iconLeftName={''}
+              operation={((args: String) => {
+                console.log(args);
+                Alert.alert("Warning!", "Redirecting to an External Source");
+              })} />
 
           </View>
 
