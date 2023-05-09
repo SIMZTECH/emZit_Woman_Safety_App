@@ -1,6 +1,6 @@
 /* eslint-disable space-infix-ops */
 /* eslint-disable prettier/prettier */
-import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View,ScrollView} from 'react-native';
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -9,6 +9,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { AppContext } from '../../../global/GlobalState';
 import {GetPermissionsFromDatabse,UpdatePermissionsFromDatabse} from '../../database/SQLite_DB';
 import {PermissionModel } from '../../database/Model';
+import SingUp_Login_Button from './SingUp_Login_Button';
+import Permissions_Button from '../home/Permissions_Button';
 
 const SettingsScreen = () => {
   const[retrivedPermissions,setRetrievedPermissions]=React.useState<PermissionModel[]>([]);
@@ -77,50 +79,58 @@ const SettingsScreen = () => {
   };
 
   return (
-    <View className='px-5 pt-8 bg-white flex-1'>
+    <ScrollView 
+      showsVerticalScrollIndicator={false}
+      className='px-5  bg-white'>
       {(retrivedPermissions.length > 0) ? (
-        <View>
+        <View className='b pt-8 pb-8'>
           <Text className='text-[19px] font-medium text-[#f00100] mb-4'>Settings</Text>
           <View className=' space-y-2'>
             <Text className='text-[#ff6c6c] font-normal'>SECURITY</Text>
-            <View className='flex-row items-center justify-center space-x-2 h-10 bg-[#f00100] rounded-md'>
-              <Ionicons name='logo-google' size={15} color={'white'} />
-              <Text className='text-white text-[15px]'>Sign in with Google</Text>
-            </View>
+
+            <SingUp_Login_Button
+              args={'google'}
+              text={'Sign in with Google'}
+              iconName={'md-logo-google'}
+              operation={((args: String) => {
+                console.log(args);
+              })} />
+            <SingUp_Login_Button
+              args={'apple'}
+              text={'Sign in with Apple'}
+              iconName={'md-logo-apple'}
+              operation={((args: String) => {
+                console.log(args);
+              })} />
+
           </View>
 
           <View className=' space-y-2 mt-5'>
             <Text className='text-[#ff6c6c] font-normal'>PERMISSIONS</Text>
-            {/* 1 */}
-            <View className='flex-row h-10 bg-[#eff2fa] rounded-md items-center'>
-              <View className='flex-row items-center px-2 space-x-2'>
-                <Ionicons name='md-location-outline' size={20} color={'#ff6c6c'} />
-                <Text>Allow Location Access</Text>
-              </View>
-              {/* toggle */}
-              <View className='h-full flex-1 items-end justify-center pr-3'>
-                <Pressable
-                  onPress={handleToggleBtnBluetoothPermission}
-                  className='h-6 w-12 px-0.5 pt-0.5 pb-0.5 bg-orange-400 rounded-full bg-[#f00100] relative transition-all'>
-                  <Text className={`h-full w-5 bg-white rounded-full left-6 transition`} />
-                </Pressable>
-              </View>
-            </View>
-            {/* 2 */}
-            <View className="flex-row h-10 bg-[#eff2fa] rounded-md items-center">
-              <View className='flex-row items-center px-2 space-x-2'>
-                <AntDesign name='contacts' size={20} color={'#ff6c6c'} />
-                <Text>Allow Contacts Access </Text>
-              </View>
-              {/* toggle */}
-              <View className="h-full flex-1 items-end justify-center pr-3">
-                <Pressable
-                  onPress={handleToggleBtnContactPermission}
-                  className='h-6 w-12 px-0.5 pt-0.5 pb-0.5 bg-orange-400 rounded-full bg-[#f00100] relative transition-all'>
-                  <Text className={`h-full w-5 bg-white rounded-full left-${(searchPermision('contactsPermission'))?toggleRightContactPermission:toggleleftContactPermission} transition`} />
-                </Pressable>
-              </View>
-            </View>
+            <Permissions_Button
+              iconName={'md-location-outline'}
+              text={'Allow Locations'}
+              args={'location'}
+              operation={((args: String) => {
+                console.log(args);
+              })} />
+
+            <Permissions_Button
+              iconName={'contacts'}
+              text={'Allow Contacts'}
+              args={'contacts'}
+              operation={((args: String) => {
+                console.log(args);
+              })} />
+
+            <Permissions_Button
+              iconName={'envelope-open-text'}
+              text={'Allow SMS'}
+              args={'messages'}
+              operation={((args: String) => {
+                console.log(args);
+              })} />
+
           </View>
 
           <View className=' space-y-2 mt-5'>
@@ -172,7 +182,7 @@ const SettingsScreen = () => {
         </View>
       )}
 
-    </View>
+    </ScrollView>
   )
 };
 
