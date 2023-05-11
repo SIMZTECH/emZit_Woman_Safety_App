@@ -18,6 +18,7 @@ const Permissions_Button = ({operation,iconName,text,args}:propsType) => {
               {(args==='location') && <Ionicons name={`${iconName}`} size={20} color={'#ff6c6c'} />}
               {(args==='contacts') && <AntDesign name={`${iconName}`} size={20} color={'#ff6c6c'} />}
               {(args==='messages') && <FontAwesome5 name={`${iconName}`} size={20} color={'#ff6c6c'} />}
+              {(args==='phone') && <FontAwesome5 name={`${iconName}`} size={20} color={'#ff6c6c'} />}
               <Text>{text}</Text>
           </View>
           {/* toggle */}

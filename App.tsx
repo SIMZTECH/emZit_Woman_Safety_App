@@ -6,7 +6,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import 'react-native-gesture-handler';
-import { creatTable, dropTable,creatPermissionTable} from './src/database/SQLite_DB';
+import { creatContactsTable, dropTable,creatPermissionTable} from './src/database/SQLite_DB';
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
 import MainRouteNavigation from './src/navigations/MainRouteNavigation';
 import {enableLatestRenderer} from 'react-native-maps';
@@ -21,7 +21,7 @@ const App = () => {
 
   const tableCreation = useCallback(() => {
 
-    creatTable('contacts', '');
+    creatContactsTable('contacts', '');
     creatPermissionTable('permissions', '');
 
   }, []);

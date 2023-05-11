@@ -10,9 +10,9 @@
 /* eslint-disable prettier/prettier */
 import React,{useState} from 'react';
 import { openDatabase,enablePromise,SQLiteDatabase} from 'react-native-sqlite-storage';
-import { ContactsModel,PermissionModel} from './Model';
+import { PermissionModel} from './Model';
+import { ContactsModelModified } from './Model';
 import { ToastAndroid } from 'react-native';
-
 
 enablePromise(true);
 
@@ -20,15 +20,13 @@ enablePromise(true);
 const db=openDatabase({ name:'emergencyApp', location: 'default' });
 
 // create table 
-export const creatTable = async (table: string, query: string) => {
+export const creatContactsTable = async (table: string, query: string) => {
     try {
         (await db).transaction(tx => {
             tx.executeSql(
                 `CREATE TABLE IF NOT EXISTS ${table}(
                         rowID INTEGER PRIMARY KEY AUTOINCREMENT,
-                        contactID INTEGER,
-                        contactNumber VARCHAR(20),
-                        contactName VARCHAR(10),
+                        recordID VARCHAR(20),
                         contactPriority BOOLEAN,
                         createdAt TIMESTAMP CURRENT_TIMESTAMP
                     )`,
@@ -143,12 +141,12 @@ export const UpdatePermissionsFromDatabse=async(table:string,data:PermissionMode
 
 
 //save into table
-export const SaveToDatabse=async(table:string,data:ContactsModel,query:string)=>{
+export const SaveContactToDatabse=async(table:string,data:ContactsModelModified,query:string)=>{
     try {
         (await db).transaction(tx =>{
             tx.executeSql(
-                `INSERT INTO ${table}(contactID,contactNumber,contactName,contactPriority) VALUES(?,?,?,?)`,
-                [data.contactID,data.contactNumber,data.contactName,data.contactPriority],
+                `INSERT INTO ${table}(recordID,contactPriority) VALUES(?,?)`,
+                [data.recordID,data.contactPriority],
                 ()=>{
                     console.log(`${table}` + ' ' + 'table inserted with data successfully');
                     ToastAndroid.show(`Contact Set as ${(data.contactPriority)?'High':'Low'} Priority`,ToastAndroid.SHORT);
@@ -165,12 +163,12 @@ export const SaveToDatabse=async(table:string,data:ContactsModel,query:string)=>
 };
 
 // retrieve data from databse
-export const GetFromDatabse=async(table:string,query:string):Promise <ContactsModel[]>=>{
+export const GetContactsFromDatabse=async(table:string,query:string):Promise <ContactsModelModified[]>=>{
     const DB:SQLiteDatabase=await db;
 
-    let Data:ContactsModel[]=[];
+    let Data:ContactsModelModified[]=[];
     try {
-        const results= await DB.executeSql(`SELECT * FROM ${table} ORDER BY contactID DESC LIMIT 5`);
+        const results= await DB.executeSql(`SELECT * FROM ${table} ORDER BY rowID DESC LIMIT 5`);
         if(results.length>0){
             results.forEach((value)=>{
 
@@ -207,48 +205,42 @@ export const RetrieveSinglePermissionFromDatabse=async(table:string,query:string
         }else{
             console.log('failed to Retrieve Data Successfully');
         }
-
     } catch (error) {
         
     }
-
     return Data;
 };
 
 
 // retrieve single contact from database
 // retrieve data from databse
-export const RetrieveSingleContactFromDatabse=async(table:string,query:string,id:number):Promise <ContactsModel[]>=>{
+export const RetrieveSingleContactFromDatabse=async(table:string,query:string,id:number):Promise <ContactsModelModified[]>=>{
     const DB:SQLiteDatabase=await db;
 
-    let Data:ContactsModel[]=[];
+    let Data:ContactsModelModified[]=[];
     try {
-        const results= await DB.executeSql(`SELECT * FROM ${table} WHERE contactID=?`,[id]);
+        const results= await DB.executeSql(`SELECT * FROM ${table} WHERE recordID=?`,[id]);
         if(results.length>0){
             results.forEach((value)=>{
-
                 for(let index=0; index<value.rows.length;index++){
                     Data.push(value.rows.item(index));
                 }
             });
-
         }else{
             console.log('failed to Retrieve Data Successfully');
         }
-
     } catch (error) {
         
     }
-
     return Data;
 };
 
 // delete item from database
-export const deleteItemFromDatabase=async(table:string,id:number,query:string)=>{
+export const deleteContactFromDatabase=async(table:string,id:String,query:string)=>{
     try {
         (await db).transaction(tx=>{
             tx.executeSql(
-                `DELETE FROM ${table} WHERE contactID=?`,
+                `DELETE FROM ${table} WHERE recordID=?`,
                 [id],
                 () => {
                     console.log(`${table}` + ' ' + 'table item deleted successfully');
@@ -289,10 +281,11 @@ export const dropTable=async(table:string,query:string)=>{
 
 
 
-export default {creatTable,
-    deleteItemFromDatabase,
-    SaveToDatabse,
-    GetFromDatabse,
+export default {
+    creatContactsTable,
+    deleteContactFromDatabase,
+    SaveContactToDatabse,
+    GetContactsFromDatabse,
     dropTable,
     RetrieveSingleContactFromDatabse,
     creatPermissionTable,

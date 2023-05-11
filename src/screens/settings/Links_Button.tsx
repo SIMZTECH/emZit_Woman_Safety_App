@@ -16,7 +16,7 @@ type propsType={
 const Links_Button = ({args,iconName,iconLeftPresent=false,operation,text,iconLeftName,title}:propsType) => {
   return (
       <View
-      className={`space-y-2 mt-1 ${(title==='HELP' || title==='')?'mb-1':'mb-3'}`}
+      className={`space-y-1 mt-1 ${(title==='HELP' || title==='')?'mb-1':'mb-1'}`}
       >
           {title &&<Text className='text-[#ff6c6c] font-normal'>{title}</Text>}
           <Pressable

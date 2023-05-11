@@ -1,11 +1,18 @@
 /* eslint-disable prettier/prettier */
-export type ContactsModel = {
+// export type ContactsModel = {
+//     rowID:number,
+//     contactID:number,
+//     contactName:string,
+//     contactNumber:string,
+//     contactPriority:boolean,
+//     createdAt:string,
+// };
+
+export type ContactsModelModified = {
     rowID:number,
-    contactID:number,
-    contactName:string,
-    contactNumber:string,
-    contactPriority:boolean,
-    createdAt:string,
+    recordID:String,
+    contactPriority:Boolean,
+    createdAt:String,
 };
 
 // permission model
