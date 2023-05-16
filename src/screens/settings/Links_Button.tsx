@@ -10,23 +10,24 @@ type propsType={
     text:String,
     iconLeftName:String,
     title:String,
+    theme:any,
     operation:(args:String)=>void,
 };
 
-const Links_Button = ({args,iconName,iconLeftPresent=false,operation,text,iconLeftName,title}:propsType) => {
+const Links_Button = ({args,iconName,iconLeftPresent=false,operation,text,iconLeftName,title,theme}:propsType) => {
   return (
       <View
       className={`space-y-1 mt-1 ${(title==='HELP' || title==='')?'mb-1':'mb-1'}`}
       >
-          {title &&<Text className='text-[#ff6c6c] font-normal'>{title}</Text>}
+          {title &&<Text className={` font-normal ${(theme === 'dark') ? 'text-white' : 'text-[#ff6c6c]'}`}>{title}</Text>}
           <Pressable
-              className='flex-row h-10 bg-[#eff2fa] rounded-md items-center'
+              className={`flex-row h-10 rounded-md items-center ${(theme === 'dark') ? 'bg-[#000]' : 'bg-[#eff2fa]'}`}
               onPress={() => {
                   operation(args);
               }}>
               <View className='flex-row items-center pl-2 space-x-2 h-full'>
                   <FontAwesome5 name={`${iconName}`} size={20} color={'#ff6c6c'} />
-                  <Text>{text}</Text>
+                  <Text className={`${(theme === 'dark') ? 'text-[#eff2fa]' : 'text-[#c3c6d3]'} `}>{text}</Text>
               </View>
               {iconLeftPresent &&
                   <View className='h-full flex items-end justify-center flex-1 pr-2'>

@@ -9,10 +9,11 @@ import { Contact } from 'react-native-contacts';
 
 type propsType={
   userData:Contact,
-  navigation:any
+  navigation:any,
+  theme:any
 };
 
-const SingleContactComponent= ({userData, navigation}:propsType) => {
+const SingleContactComponent= ({userData, navigation,theme}:propsType) => {
   
     const {displayName,phoneNumbers} = userData;
     
@@ -35,7 +36,7 @@ const SingleContactComponent= ({userData, navigation}:propsType) => {
       };
 
   return (
-    <View className="flex-row px-4 items-center h-14 mb-2 border-b-[0.5px] border-b-[#f00100] border-dotted">
+    <View className={`flex-row px-4 items-center h-14 mb-2 border-b-[0.5px]  border-dotted ${(theme === 'dark') ? 'border-b-white' : 'border-b-[#f00100]'}`}>
           <View className="b flex-row space-x-3 flex-1">
               <View className="w-10 h-10 rounded-full">
                   <Image
@@ -45,8 +46,8 @@ const SingleContactComponent= ({userData, navigation}:propsType) => {
                   />
               </View>
               <View>
-                  <Text>{displayName}</Text>
-                  <Text>{validatedPhonenumber}</Text>
+                  <Text className={`${(theme === 'dark') ? 'text-white' : 'text-black'} text-[16px]`}>{displayName}</Text>
+                  <Text className={`${(theme === 'dark') ? 'text-white' : 'text-black'} text-[16px]`}>{validatedPhonenumber}</Text>
               </View>
           </View>
 
@@ -54,7 +55,7 @@ const SingleContactComponent= ({userData, navigation}:propsType) => {
             className=" items-end h-full justify-center px-3"
             onPress={onPressedOption}
           >
-                <Entypo name="dots-three-vertical" size={24} color={'#f00100'}/>
+                <Entypo name="dots-three-vertical" size={24} color={(theme==='dark')?'white':'#f00100'}/>
           </Pressable>
     </View>
   )

@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import {Picker} from '@react-native-picker/picker';
+import { Appearance } from 'react-native';
 import { Contact } from 'react-native-contacts';
 // import { ContactsModel } from '../../database/Model';
 import { ContactsModelModified } from '../../database/Model';
@@ -21,9 +22,11 @@ type propsType={
 }
 
 const SelectedContactsScreen = ({route}:propsType)=>{
+
   const {displayName,jobTitle,phoneNumbers,company,recordID} = route.params.data;
   const [prority,setPriority]=useState<string>('High');
   const [singleContact,setSingleContact]=useState<ContactsModelModified[]>([]);
+  const [theme, setTheme]=React.useState(Appearance.getColorScheme);
 
   const validatedPhonenumber=(phoneNumbers[0]===undefined)?'delete this contact':phoneNumbers[0].number;
 
@@ -41,11 +44,18 @@ const SelectedContactsScreen = ({route}:propsType)=>{
         console.log(value);
         setSingleContact(value);
       });
+
+
   },[recordID])
   
 
   useEffect(() => {
+    
     getSingleContact();
+
+    Appearance.addChangeListener((scheme)=>{
+      setTheme(scheme.colorScheme);
+    });
  
   },[getSingleContact]);
   
@@ -78,7 +88,7 @@ const SelectedContactsScreen = ({route}:propsType)=>{
   };
 
   return (
-    <View className='flex-1'>
+    <View className={`flex-1 `}>
       <View className=' bg-[#ff6c6c] px-4 h-[350px] relative items-center justify-center'>
         <Pressable 
           onPress={()=>Navigation.goBack()}
@@ -94,8 +104,8 @@ const SelectedContactsScreen = ({route}:propsType)=>{
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="call" size={22} color={'#f00100'} />
             <View>
-              <Text>{'+26 '+validatedPhonenumber}</Text>
-              <Text>Primary Number</Text>
+              <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
+              <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}>Primary Number</Text>
             </View>
           </View>
           <Feather name='message-circle' size={22} color={'#f00100'} />
@@ -104,7 +114,7 @@ const SelectedContactsScreen = ({route}:propsType)=>{
         <View className=' bg-white h-[55px] rounded-md shadow-md flex-row items-center justify-between px-3'>
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="videocam" size={22} color={'#f00100'} />
-            <Text>{'+26 '+validatedPhonenumber}</Text>
+            <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
           </View>
           <Ionicons name="videocam" size={22} color={'#f00100'} />
         </View>
@@ -112,17 +122,18 @@ const SelectedContactsScreen = ({route}:propsType)=>{
         <View className=' bg-white h-[55px] rounded-md shadow-md flex-row items-center justify-between px-3'>
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="logo-whatsapp" size={22} color={'#f00100'} />
-            <Text>{'+26 '+validatedPhonenumber}</Text>
+            <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
           </View>
           <Ionicons name="logo-whatsapp" size={22} color={'#f00100'} />
         </View>
 
         {/* add priority */}
         <View className=' bg-white h-[55px] rounded-md shadow-md flex-row items-center justify-between px-3'>
-          <Text className='b text-[16px]'> Set Priority </Text>
+          <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}> Set Priority </Text>
           <Picker
             style={{
               width: '40%',
+              color:(theme==='dark'?'#c3c6d3':'#c3c6d3')
             }}
             selectedValue={prority}
             onValueChange={(itemValue, itemIndex) =>

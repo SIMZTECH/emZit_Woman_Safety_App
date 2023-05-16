@@ -10,6 +10,7 @@
 import React, { useCallback, useEffect, useState} from 'react';
 import { Alert,StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList} from 'react-native';
 import {Contact, getAll} from 'react-native-contacts';
+import { Appearance } from 'react-native';
 import SingleContactComponent from './SingleContactComponent';
 
 type propsType={
@@ -19,6 +20,7 @@ type propsType={
 const AllUserContactsScreen = ({navigation}:propsType) => {
  
   const[allUserContacts,setAllUserContacts]=useState<Contact[]>([]);
+  const [theme, setTheme]=React.useState(Appearance.getColorScheme);
 
   const getUserContacts=useCallback(async()=>{
     getAll()
@@ -36,6 +38,10 @@ const AllUserContactsScreen = ({navigation}:propsType) => {
 
   useEffect(() => {
     getUserContacts();
+
+    Appearance.addChangeListener((scheme)=>{
+      setTheme(scheme.colorScheme);
+    });
    
   },[getUserContacts]);
 
@@ -48,12 +54,12 @@ const AllUserContactsScreen = ({navigation}:propsType) => {
   // console.log("data\t"+JSON.stringify(allUserContacts));
 
   return (
-    <View className="flex-1 pt-4 bg-white">
+    <View className={`flex-1 pt-4 ${(theme === 'dark') ? 'bg-black' : 'bg-[#eff2fa]'} `}>
       {(allUserContacts.length > 0 ) ? (
           <VirtualizedList
             data={allUserContacts}
             initialNumToRender={9}
-            renderItem={(contact) =><SingleContactComponent userData={contact.item} key={contact.index} navigation={navigation} />}
+            renderItem={(contact) =><SingleContactComponent userData={contact.item} key={contact.index} navigation={navigation} theme={theme}/>}
             getItemCount={(data)=>data.length}
             keyExtractor={(contact:Contact)=>contact.recordID}
             getItem={getItem}

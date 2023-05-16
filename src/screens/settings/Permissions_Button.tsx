@@ -8,18 +8,19 @@ type propsType={
     iconName:String,
     text:String,
     args:String,
+    theme:any,
     operation:(args:String)=>void,
 };
 
-const Permissions_Button = ({operation,iconName,text,args}:propsType) => {
+const Permissions_Button = ({operation,iconName,text,args,theme}:propsType) => {
   return (
-      <View className='flex-row h-10 bg-[#eff2fa] rounded-md items-center mt-1 mb-1'>
+      <View className={`flex-row h-10 rounded-md items-center mt-1 mb-1 ${(theme === 'dark') ? 'bg-[#000]' : 'bg-[#eff2fa]'}`}>
           <View className='flex-row items-center px-2 space-x-2'>
               {(args==='location') && <Ionicons name={`${iconName}`} size={20} color={'#ff6c6c'} />}
               {(args==='contacts') && <AntDesign name={`${iconName}`} size={20} color={'#ff6c6c'} />}
               {(args==='messages') && <FontAwesome5 name={`${iconName}`} size={20} color={'#ff6c6c'} />}
               {(args==='phone') && <FontAwesome5 name={`${iconName}`} size={20} color={'#ff6c6c'} />}
-              <Text>{text}</Text>
+              <Text className={`${(theme === 'dark') ? 'text-[#eff2fa]' : 'text-[#c3c6d3]'} `}>{text}</Text>
           </View>
           {/* toggle */}
           <View className='h-full flex-1 items-end justify-center pr-3'>

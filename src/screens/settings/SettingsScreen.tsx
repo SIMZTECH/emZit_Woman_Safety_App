@@ -3,13 +3,15 @@
 /* eslint-disable space-infix-ops */
 /* eslint-disable prettier/prettier */
 import {Alert,StyleSheet, Text, View,ScrollView} from 'react-native';
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import SingUp_Login_Button from './SingUp_Login_Button';
 import Permissions_Button from './Permissions_Button';
+import { Appearance } from 'react-native';
 import Links_Button from './Links_Button';
 
 const SettingsScreen = () => {
+  const [theme, setTheme]=React.useState(Appearance.getColorScheme);
 
   const Navigation=useNavigation();
 
@@ -21,15 +23,23 @@ const SettingsScreen = () => {
 
   });
 
+  useEffect(()=>{
+
+    Appearance.addChangeListener((scheme)=>{
+      setTheme(scheme.colorScheme);
+    });
+
+  });
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      className='px-5  bg-white'>
+      className={`px-5 ${(theme === 'dark') ? 'bg-black' : 'bg-white'}`}>
 
       <View className='b mt-2'>
-        <Text className='text-[19px] font-medium text-[#f00100] mb-4'>Settings</Text>
+        <Text className={`text-[19px] font-medium  mb-4 ${(theme === 'dark') ? 'text-white' : 'text-[#f00100]'}`}>Settings</Text>
         <View className=' space-y-1'>
-          <Text className='text-[#ff6c6c] font-normal'>SECURITY</Text>
+          <Text className={` font-normal ${(theme === 'dark') ? 'text-white' : 'text-[#ff6c6c]'}`}>SECURITY</Text>
 
           <SingUp_Login_Button
             args={'google'}
@@ -41,8 +51,9 @@ const SettingsScreen = () => {
         </View>
 
         <View className=' space-y-1 mt-3'>
-          <Text className='text-[#ff6c6c] font-normal'>PERMISSIONS</Text>
+          <Text className={` font-normal ${(theme === 'dark') ? 'text-white' : 'text-[#ff6c6c]'}`}>PERMISSIONS</Text>
           <Permissions_Button
+            theme={theme}
             iconName={'md-location-outline'}
             text={'Allow Locations'}
             args={'location'}
@@ -51,6 +62,7 @@ const SettingsScreen = () => {
             })} />
 
           <Permissions_Button
+            theme={theme}
             iconName={'contacts'}
             text={'Allow Contacts'}
             args={'contacts'}
@@ -59,6 +71,7 @@ const SettingsScreen = () => {
             })} />
 
           <Permissions_Button
+            theme={theme}
             iconName={'envelope-open-text'}
             text={'Allow SMS'}
             args={'messages'}
@@ -67,6 +80,7 @@ const SettingsScreen = () => {
             })} />
           
           <Permissions_Button
+            theme={theme}
             iconName={'phone-alt'}
             text={'Allow Phone Calls'}
             args={'phone'}
@@ -86,6 +100,7 @@ const SettingsScreen = () => {
             iconLeftPresent={true}
             text={'Healthy replacement app '}
             iconLeftName={'chevron-forward'}
+            theme={theme}
             operation={((args: String) => {
               console.log(args);
               Alert.alert("Warning!", "Redirecting to an External Source");
@@ -101,7 +116,8 @@ const SettingsScreen = () => {
             operation={((args: String) => {
               console.log(args);
               Alert.alert("Warning!", "Redirecting to an External Source");
-            })} />
+            })} 
+            theme={theme} />
 
           <Links_Button
             title={'HELP'}
@@ -110,6 +126,7 @@ const SettingsScreen = () => {
             iconLeftPresent={false}
             text={'FAQ'}
             iconLeftName={''}
+            theme={theme}
             operation={((args: String) => {
               console.log(args);
               Alert.alert("Warning!", "Redirecting to an External Source");
@@ -117,6 +134,7 @@ const SettingsScreen = () => {
 
           <Links_Button
             title={''}
+            theme={theme}
             args={'support'}
             iconName={'envelope-open-text'}
             iconLeftPresent={false}
@@ -128,6 +146,7 @@ const SettingsScreen = () => {
             })} />
 
           <Links_Button
+            theme={theme}
             title={''}
             args={'policy'}
             iconName={'lock'}

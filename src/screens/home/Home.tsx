@@ -17,6 +17,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { friend, imageMap} from '../../../assets/imgaes/UIDesign/OtherImages';
 import { AppContext } from '../../../global/GlobalState';
+import { Appearance } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import DarkMode from '../../components/dark_light_mode/DarkMode';
 import useBLE from '../../useBLe';
 import CardMenu from './CardMenu';
 
@@ -25,6 +28,8 @@ import CardMenu from './CardMenu';
 
   const App = ({navigation}) => {
     const {getDeviceInfor,requestPermissions}=useBLE();
+
+    const [theme, setTheme]=React.useState(Appearance.getColorScheme);
 
     // get global state data
     const {
@@ -50,6 +55,11 @@ import CardMenu from './CardMenu';
     useEffect(() => {
       DeviceInformation();
 
+
+      Appearance.addChangeListener((scheme)=>{
+        setTheme(scheme.colorScheme);
+      });
+
     },[DeviceInformation,messageData]);
 
     const handleMenuCardPressed=(args:String)=>{
@@ -60,10 +70,9 @@ import CardMenu from './CardMenu';
       }
     };
 
-
     return (
       <SafeAreaView
-        className=" bg-[#eff2fa] relative flex-1"
+        className={`relative flex-1 ${(theme === 'dark') ? 'bg-black' : 'bg-[#eff2fa]'} `}
         style={[styles.SafeAreaViewContainer, { width: width, height: height }]}>
         <View
           className="px-8 pt-5 pb-1 flex-row justify-between bg-white shadow-md">
@@ -72,7 +81,11 @@ import CardMenu from './CardMenu';
           </TouchableOpacity>
 
           <View className="flex-row items-center justify-center space-x-2">
-            <FontAwesome5 name='heartbeat' size={20} color={'#ff6c6c'} />
+            <Animatable.View
+            animation={'pulse'} iterationCount={'infinite'}  easing={'ease-in'}
+            >
+              <FontAwesome5 name='heartbeat' size={24} color={'#ff6c6c'} />
+            </Animatable.View>
             <Text className="text-[20px] text-[#c3c6d3]">Emergency<Text className="text-[#f00100] font-bold">App</Text></Text>
           </View>
 
@@ -85,11 +98,11 @@ import CardMenu from './CardMenu';
         </View>
 
         <View className="items-center pt-12">
-          <Text className="text-[32px] text-black font-semibold text-center w-[80%]">
+          <Text className={`text-[32px]  font-semibold text-center w-[80%] ${(theme === 'dark') ? 'text-white' : 'text-black'}`}>
             Emergency help needed?
           </Text>
           <Text className="b text-[14px] text-[#b4b7c2] mt-2">just press on the button to call</Text>
-          <View className={`w-[170px] h-[170px] bg-[#f00100] rounded-full border-[6px] ${isDeviceConnected ? 'border-[#0a883f]' : 'border-[#b4b7c2]'} mt-6 mb-1 items-center justify-center`} >
+          <View className={`w-[170px] h-[170px] bg-[#f00100] rounded-full border-[6px] ${isDeviceConnected ? 'border-[#0a883f]':'border-[#b4b7c2]'} mt-6 mb-1 items-center justify-center`} >
             <MaterialCommunityIcons name="access-point" size={54} color="white" />
           </View>
           <Text className='b mb-4 bg-[#f00100] px-2 items-center rounded-sm text-white mt-2 font-medium shadow-md'>{messageData}</Text>

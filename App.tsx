@@ -13,6 +13,7 @@ import {enableLatestRenderer} from 'react-native-maps';
 import { enableScreens } from 'react-native-screens';
 import SMS from './src/screens/smsTesting/SMS';
 import SplashScreen from 'react-native-splash-screen';
+import { Appearance } from 'react-native';
 enableScreens(false);
 
 
@@ -36,6 +37,8 @@ const App = () => {
       SplashScreen.hide();
     },2000);
   }, [tableCreation]);
+
+  
 
   return (
     <GlobalStateProvider>
