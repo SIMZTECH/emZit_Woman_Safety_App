@@ -7,28 +7,37 @@
 #include "MAX30105.h"
 #include "heartRate.h"
 #include "HeartBeatSensor.h"
+#include "MuscleSensor.h"
 
 // BLE section
 BLEServer *pServer = NULL;
 BLECharacteristic *data_characteristic = NULL;
 
 bool deviceConnected = false;
-int LEDpin = 2;
-int BLINK_PIN = 36;
+int LEDpin = 2;//LED pin to indicate connected
+int BLINK_PIN = 36;//LED pin to indicate pick-ups counts
+int MuscleSensorPin=34;//esp32 pin for Muscle Sensor
+int LED_DANGER_INDICATOR_PIN = 4;
 
 bool oldDeviceConnected = false;
 float beatsPerMinute = 0;
 long averageBeatsPerMinute = 0;
+int BEATS_PER_MINUTE_THRESHOLD = 75;
 
 float newBeatsPerMinute = 0;
 long newAverageBeatsPerMinute = 0;
+
+int MUSCLE_SENSOR_THRESHOLD=4000;
+int newMuscleSensorReading=0;
+int muscleSensorReading=0;
 
 #define SERVICE_UUID "8ccbd4e6-bd76-11ed-afa1-0242ac120002"
 
 #define DATA_CHARACTERISTIC_UUID "9d99dafc-bd76-11ed-afa1-0242ac120002"
 #define BOX_CHARACTERISTIC_UUID "222f72a8-bd78-11ed-afa1-0242ac120002"
 
-HeartBeatSensor sensor(BLINK_PIN);
+HeartBeatSensor sensor(BLINK_PIN);//heartBeat sensor instatiating
+MuscleSensor muscleSensor(MuscleSensorPin,MUSCLE_SENSOR_THRESHOLD);//muscle sensor instatiating 
 
 class MyServerCallbacks : public BLEServerCallbacks
 {
@@ -79,7 +88,8 @@ void startAdvertising()
 void setup()
 {
   Serial.begin(115200);
-  pinMode(LEDpin, OUTPUT);
+  pinMode(LEDpin, OUTPUT);//connection indicator
+  pinMode(LED_DANGER_INDICATOR_PIN, OUTPUT);//danger indicator 
 
   Serial.println("Start server");
   initBLE();
@@ -87,7 +97,6 @@ void setup()
 
   // initalize sensor
   sensor.InitializeSensor();
-
 };
   
 void loop()
@@ -95,36 +104,59 @@ void loop()
   if (deviceConnected)
   {
     digitalWrite(LEDpin,HIGH);
-    sensor.RunSensorLogic();
+    // TODO:: Add delay before sensor data pick ups begins
 
-    // get readings
+    sensor.RunSensorLogic();//run logic for heartBeat sensor
+    muscleSensor.RunMuscleSensorLogic();//run logic for muscle sensor
+
+    // get readings for heartBeat sensor
     newBeatsPerMinute=sensor.GetBeatsPerMinute();
     newAverageBeatsPerMinute=sensor.GetBeatAverage();
+
+    // get readings for muscle sensor
+    newMuscleSensorReading=muscleSensor.GetEmgReading();
+
+    // pick high threshold
+    if (beatsPerMinute>BEATS_PER_MINUTE_THRESHOLD && muscleSensorReading<MUSCLE_SENSOR_THRESHOLD)
+    {
+      data_characteristic->setValue("danger");
+      data_characteristic->notify();
+
+      // blink LED
+      digitalWrite(LED_DANGER_INDICATOR_PIN, HIGH);
+      delay(50);
+      digitalWrite(LED_DANGER_INDICATOR_PIN, LOW); 
+    }
+    else
+    {
+      data_characteristic->setValue("no danger");
+      data_characteristic->notify();
+      // turn off LED
+      digitalWrite(LED_DANGER_INDICATOR_PIN, LOW);
+    }
 
     if(beatsPerMinute!=newBeatsPerMinute){
       beatsPerMinute=newBeatsPerMinute;
 
-      // pick high threshold
-      if(beatsPerMinute>75){
-        data_characteristic->setValue("danger");
-        data_characteristic->notify(); 
-      }else{
-        data_characteristic->setValue("no danger");
-        data_characteristic->notify(); 
-      }
-
-      Serial.print(", BPM=");
+      Serial.print(", BPM:");
       Serial.print(beatsPerMinute);
+    }
+
+    if(muscleSensorReading!=newMuscleSensorReading){
+      muscleSensorReading=newMuscleSensorReading;
+      Serial.print(", emgReading:");
+      Serial.print(muscleSensorReading);
     }
 
     if(averageBeatsPerMinute!=newAverageBeatsPerMinute){
       averageBeatsPerMinute=newAverageBeatsPerMinute;
 
-          Serial.print(", Avg BPM=");
+          Serial.print(", Avg BPM:");
           Serial.print(averageBeatsPerMinute);
     }
 
     delay(3);
+
   };
 
   if(!deviceConnected ){
