@@ -24,6 +24,7 @@
     "react-native-base64": "^0.2.1",
     "react-native-ble-plx": "^2.0.3",
     "react-native-contacts": "^7.0.5",
+    "react-native-countdown-circle-timer": "^3.2.1",
     "react-native-device-info": "^10.5.0",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-geolocation-service": "^5.3.1",
@@ -40,6 +41,7 @@
     "react-native-screens": "^3.20.0",
     "react-native-splash-screen": "^3.3.0",
     "react-native-sqlite-storage": "^6.0.1",
+    "react-native-svg": "^13.9.0",
     "react-native-tab-view": "^3.5.1",
     "react-native-vector-icons": "^9.2.0"
   },

@@ -27,6 +27,18 @@
       android:name="com.google.android.geo.API_KEY"
       android:value="AIzaSyD4xOcb9d8OcAqMG5ooNb5pFNaq8azHC3A"/>
 
+      <!-- added manually -->
+      <activity
+          android:name=".SplashActivity"
+          android:theme="@style/splashTheme"
+          android:label="@string/app_name"
+          android:exported="true">
+          <intent-filter>
+              <action android:name="android.intent.action.MAIN" />
+              <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+      </activity>
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -34,10 +46,6 @@
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
       </activity>
     </application>
 </manifest>

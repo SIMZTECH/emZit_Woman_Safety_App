@@ -1,45 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_gb">
-
-    <ImageView
-        android:id="@+id/logo"
-        android:src="@drawable/applogo__2_"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="emZit"
-        android:layout_below="@+id/logo"
-        android:layout_marginTop="10dp"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="#ffff"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="All Rights Reserved @cbu 2023"
-        android:layout_below="@+id/logo"
-        android:layout_marginTop="230dp"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        android:textColor="#ffff"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text=" Version 2.0"
-        android:layout_below="@+id/logo"
-        android:layout_marginTop="250dp"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        android:textColor="#ffff"/>
+   android:background="@drawable/background_splash">
 </RelativeLayout>

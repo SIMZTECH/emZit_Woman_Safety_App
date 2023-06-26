@@ -22,6 +22,7 @@ import * as Animatable from 'react-native-animatable';
 import DarkMode from '../../components/dark_light_mode/DarkMode';
 import useBLE from '../../useBLe';
 import CardMenu from './CardMenu';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
   const {width,height} = Dimensions.get('screen');
   LogBox.ignoreLogs(['new NativeEventEmitter']);
@@ -30,6 +31,7 @@ import CardMenu from './CardMenu';
     const {getDeviceInfor,requestPermissions}=useBLE();
 
     const [theme, setTheme]=React.useState(Appearance.getColorScheme);
+    const [key, setKey] = useState(0);
 
     // get global state data
     const {
@@ -50,6 +52,19 @@ import CardMenu from './CardMenu';
       getDeviceInfor();
 
     },[getDeviceInfor]);
+
+    const renderTime = ({remainingTime}) => {
+      if (remainingTime === 0) {
+        setKey((prev)=>prev+1);
+        return <Text > calling.....</Text>;
+      }
+    
+      return (
+        <View>
+          {/* <Text>{remainingTime}</Text> */}
+        </View>
+      );
+    };
 
     // use effect
     useEffect(() => {
@@ -97,14 +112,39 @@ import CardMenu from './CardMenu';
           </View>
         </View>
 
-        <View className="items-center pt-12">
+        <View className="items-center pt-12 relative flex-1">
           <Text className={`text-[32px]  font-semibold text-center w-[80%] ${(theme === 'dark') ? 'text-white' : 'text-black'}`}>
             Emergency help needed?
           </Text>
           <Text className="b text-[14px] text-[#b4b7c2] mt-2">just press on the button to call</Text>
-          <View className={`w-[170px] h-[170px] bg-[#f00100] rounded-full border-[6px] ${isDeviceConnected ? 'border-[#0a883f]':'border-[#b4b7c2]'} mt-6 mb-1 items-center justify-center`} >
-            <MaterialCommunityIcons name="access-point" size={54} color="white" />
+
+          <View className='b bg-stone-700 items-center justify-center relative h-[200px]'>
+
+            <View className={`w-[170px] h-[170px] bg-[#f00100] rounded-full mt-6 mb-1 items-center justify-center absolute`} >
+              <MaterialCommunityIcons name="access-point" size={54} color="white" />
+            </View>
+
+            {/* display timer if device connected */}
+            {isDeviceConnected &&
+              <View className='b absolute'>
+                <CountdownCircleTimer
+                  key={key}
+                  isPlaying
+                  size={180}
+                  duration={10}
+                  colors={['#ff6c6c', '#ff6c6c', '#ff6c6c', '#ff6c6c']}
+                  colorsTime={[7, 5, 2, 0]}
+                  strokeWidth={2}
+                  trailColor={'#c3c6d3'}
+                >
+                  {renderTime}
+                </CountdownCircleTimer>
+
+              </View>
+            }
+
           </View>
+
           <Text className='b mb-4 bg-[#f00100] px-2 items-center rounded-sm text-white mt-2 font-medium shadow-md'>{messageData}</Text>
           <Text className="text-[20px] font-semibold text-black">Not sure what to do?</Text>
           <Text className="text-[14px] text-[#b4b7c2] mt-2">Read the guide</Text>
