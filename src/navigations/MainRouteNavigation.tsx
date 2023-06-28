@@ -2,7 +2,7 @@
 import { StyleSheet} from 'react-native';
 import React, { useCallback, useEffect} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import DrawerNavigation from './DrawerNavigation';
+import HomeStack from './HomeStack';
 import { SliderScreen } from '../pages/onBoardScreen/index';
 import { PermissionModel } from '../database/Model';
 import {GetPermissionsFromDatabse} from '../database/SQLite_DB';
@@ -42,19 +42,19 @@ const MainRouteNavigation = () => {
         (permissionsData.length > 0) ? (
           (permissionsData[0].permissionState && permissionsData[1].permissionState && permissionsData[2].permissionState) ? (
             <>
-              <Stack.Screen name="DrawerNavigation" component={DrawerNavigation}/>
+              <Stack.Screen name="HomeStack" component={HomeStack}/>
               <Stack.Screen name="SliderScreen" component={SliderScreen}/>
             </>
           ) : (
             <>
               <Stack.Screen name="SliderScreen" component={SliderScreen}/>
-              <Stack.Screen name="DrawerNavigation" component={DrawerNavigation}/>
+              <Stack.Screen name="HomeStack" component={HomeStack}/>
             </>
           )
         ) : (
             <>
               <Stack.Screen name="SliderScreen" component={SliderScreen} />
-              <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
+              <Stack.Screen name="HomeStack" component={HomeStack} />
             </>
         )
       ) : (
@@ -70,4 +70,4 @@ const MainRouteNavigation = () => {
 
 export default MainRouteNavigation;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

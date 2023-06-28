@@ -7,7 +7,6 @@ import Profile from '../screens/profile/Profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SettingsScreen from '../screens/settings/SettingsScreen';
-import Contacts from '../screens/contacts/Contacts';
 import Home from '../screens/home/Home';
 import ContactScreenTopNavigation from './ContactScreenTopNavigation';
 import { useNavigation } from '@react-navigation/native';
