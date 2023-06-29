@@ -7,26 +7,36 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useState} from 'react';
 import { Alert,StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList} from 'react-native';
 import {Contact, getAll} from 'react-native-contacts';
 import { Appearance } from 'react-native';
 import SingleContactComponent from './SingleContactComponent';
+import { AppContext } from '../../../global/GlobalState';
+import { useNavigation } from '@react-navigation/native';
 
 type propsType={
   navigation:any
 }
 
+
+
 const AllUserContactsScreen = ({navigation}:propsType) => {
+  const Navigation = useNavigation();
  
   const[allUserContacts,setAllUserContacts]=useState<Contact[]>([]);
   const [theme, setTheme]=React.useState(Appearance.getColorScheme);
 
-  const getUserContacts=useCallback(async()=>{
+  const {
+    currentRoute,setCurrentRoute,
+} = React.useContext(AppContext);
+
+  const getUserContacts=useMemo(async()=>{
     getAll()
     .then((contacts) => {
-      if (true) {
+      if (allUserContacts.length<=0) {
         setAllUserContacts(contacts);
+        console.log('contacts loaded');
       } 
       return
     })
@@ -35,30 +45,36 @@ const AllUserContactsScreen = ({navigation}:propsType) => {
     });
   },[]);
 
+  // const HandleSetCurrentRoute=useMemo(()=>{
+  //   setTimeout(() => {
+  //     setCurrentRoute(Navigation.getState().routes[0].name);
+  //   },3000);
+
+  // },[Navigation, setCurrentRoute]);
+
 
   useEffect(() => {
-    getUserContacts();
+    getUserContacts;
 
     Appearance.addChangeListener((scheme)=>{
       setTheme(scheme.colorScheme);
     });
    
+
   },[getUserContacts]);
-
-
 
   const getItem=(_data, index)=>{
     return _data[index];
   };
-
   // console.log("data\t"+JSON.stringify(allUserContacts));
+  // console.log("Current Route:"+currentRoute);
 
   return (
     <View className={`flex-1 pt-4 ${(theme === 'dark') ? 'bg-black' : 'bg-[#eff2fa]'} `}>
       {(allUserContacts.length > 0 ) ? (
           <VirtualizedList
             data={allUserContacts}
-            initialNumToRender={9}
+            initialNumToRender={20}
             renderItem={(contact) =><SingleContactComponent userData={contact.item} key={contact.index} navigation={navigation} theme={theme}/>}
             getItemCount={(data)=>data.length}
             keyExtractor={(contact:Contact)=>contact.recordID}

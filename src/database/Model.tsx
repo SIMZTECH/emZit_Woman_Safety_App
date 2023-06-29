@@ -13,6 +13,8 @@ export type ContactsModelModified = {
     recordID:String,
     contactPriority:Boolean,
     createdAt:String,
+    contactName:String;
+    contactNumber:String;
 };
 
 // permission model

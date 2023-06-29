@@ -2,6 +2,7 @@
 import React from 'react';
 import { Device } from 'react-native-ble-plx';
 import {Contact} from 'react-native-contacts';
+import { ContactsModelModified } from '../src/database/Model';
 
 type contextStates={
   isDeviceConnected:Boolean,
@@ -17,26 +18,30 @@ type contextStates={
   singleContactDetails:Contact[],
   deviceInformation:any,
   smsPermissions:Boolean,
+  currentRoute:string
 
 };
 
 export const AppContext=React.createContext();
 
 export const GlobalStateProvider=({children})=>{
-    const [isDeviceConnected,setIsDeviceConnected]= React.useState<Boolean>(false);
+
+    const [isDeviceConnected,setIsDeviceConnected] = React.useState<Boolean>(false);
     const [userData,setUserData]= React.useState([]);
-    const [totalUserContacts,setTotalUserContacts]= React.useState<number>(0);
-    const [locationPermission,setLocationPermission]= React.useState<Boolean>(false);
-    const [contactsPermission,setContactsPermission]= React.useState<Boolean>(false);
-    const [locationCoordination,SetLocationCoordination]= React.useState(null);
-    const [bluetoothPermission,SetBluetoothPermission]= React.useState<Boolean>(false);
-    const [smsPermissions,setSmsPermissions]= React.useState<Boolean>(false);
+    const [totalUserContacts,setTotalUserContacts] = React.useState<number>(0);
+    const [locationPermission,setLocationPermission] = React.useState<Boolean>(false);
+    const [contactsPermission,setContactsPermission] = React.useState<Boolean>(false);
+    const [locationCoordination,SetLocationCoordination] = React.useState(null);
+    const [bluetoothPermission,SetBluetoothPermission] = React.useState<Boolean>(false);
+    const [smsPermissions,setSmsPermissions] = React.useState<Boolean>(false);
     const [connectedDevice,setConnectedDevice] = React.useState<Device>();
     const [availableBluetoothDevices,setAvailableBluetoothDevices] = React.useState<Device[]>([]);
-    const [messageData,setMessageData] = React.useState<string>("nothing");
+    const [messageData,setMessageData] = React.useState<string>('nothing');
     const [singleContactDetails,setSingleContactDetails] = React.useState<Contact[]>([]);
     const [deviceInformation,setDeviceInformation] = React.useState();
     const [boxValue,setBoxValue] = React.useState<number>(0);
+    const [currentRoute,setCurrentRoute] = React.useState<string>('');
+    const [priorityContacts,setPriorityContacts] = React.useState<ContactsModelModified[]>([]);
 
   return (
     <AppContext.Provider value={{
@@ -53,7 +58,9 @@ export const GlobalStateProvider=({children})=>{
         deviceInformation,setDeviceInformation,
         contactsPermission,setContactsPermission,
         singleContactDetails,setSingleContactDetails,
-        smsPermissions,setSmsPermissions
+        smsPermissions,setSmsPermissions,
+        currentRoute,setCurrentRoute,
+        priorityContacts,setPriorityContacts,
     }}>
       {children}
     </AppContext.Provider>

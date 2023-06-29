@@ -5,7 +5,7 @@
 /* eslint-disable jsx-quotes */
 /* eslint-disable prettier/prettier */
 import { Alert, Pressable, StyleSheet, Text,View } from 'react-native';
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -38,20 +38,20 @@ const SelectedContactsScreen = ({route}:propsType)=>{
     });
   });
 
-  const getSingleContact=useCallback(async() => {
+  const getSingleContact=useMemo(async() => {
       await RetrieveSingleContactFromDatabse('contacts','',recordID)
       .then((value)=>{
+        console.log('single Contact Obtained from DB');
         console.log(value);
         setSingleContact(value);
       });
-
 
   },[recordID])
   
 
   useEffect(() => {
     
-    getSingleContact();
+    getSingleContact;
 
     Appearance.addChangeListener((scheme)=>{
       setTheme(scheme.colorScheme);
@@ -76,10 +76,12 @@ const SelectedContactsScreen = ({route}:propsType)=>{
       }else{
         // save the data
         let data:ContactsModelModified = {
-          recordID:recordID,
-          contactPriority:(prority === 'High') ? true : false,
+          recordID: recordID,
+          contactPriority: (prority === 'High') ? true : false,
           rowID: 0,
           createdAt: '',
+          contactName:displayName,
+          contactNumber:validatedPhonenumber
         };
         await SaveContactToDatabse('contacts', data, '');
         Navigation.goBack();
@@ -104,8 +106,8 @@ const SelectedContactsScreen = ({route}:propsType)=>{
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="call" size={22} color={'#f00100'} />
             <View>
-              <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
-              <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}>Primary Number</Text>
+              <Text className={`${(theme === 'dark') ? 'text-[#a5a5a6]' : 'text-[#a5a5a6]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
+              <Text className={`${(theme === 'dark') ? 'text-[#a5a5a6]' : 'text-[#a5a5a6]'} text-[15px]`}>Primary Number</Text>
             </View>
           </View>
           <Feather name='message-circle' size={22} color={'#f00100'} />
@@ -114,7 +116,7 @@ const SelectedContactsScreen = ({route}:propsType)=>{
         <View className=' bg-white h-[55px] rounded-md shadow-md flex-row items-center justify-between px-3'>
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="videocam" size={22} color={'#f00100'} />
-            <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
+            <Text className={`${(theme === 'dark') ? 'text-[#a5a5a6]' : 'text-[#a5a5a6]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
           </View>
           <Ionicons name="videocam" size={22} color={'#f00100'} />
         </View>
@@ -122,18 +124,18 @@ const SelectedContactsScreen = ({route}:propsType)=>{
         <View className=' bg-white h-[55px] rounded-md shadow-md flex-row items-center justify-between px-3'>
           <View className='flex-row items-center space-x-4'>
             <Ionicons name="logo-whatsapp" size={22} color={'#f00100'} />
-            <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
+            <Text className={`${(theme === 'dark') ? 'text-[#a5a5a6]' : 'text-[#a5a5a6]'} text-[15px]`}>{'+26 '+validatedPhonenumber}</Text>
           </View>
           <Ionicons name="logo-whatsapp" size={22} color={'#f00100'} />
         </View>
 
         {/* add priority */}
         <View className=' bg-white h-[55px] rounded-md shadow-md flex-row items-center justify-between px-3'>
-          <Text className={`${(theme === 'dark') ? 'text-[#c3c6d3]' : 'text-[#c3c6d3]'} text-[15px]`}> Set Priority </Text>
+          <Text className={`${(theme === 'dark') ? 'text-[#a5a5a6]' : 'text-[#a5a5a6]'} text-[15px]`}> Set Priority </Text>
           <Picker
             style={{
               width: '40%',
-              color:(theme==='dark'?'#c3c6d3':'#c3c6d3')
+              color:(theme==='dark'?'#a5a5a6':'#a5a5a6')
             }}
             selectedValue={prority}
             onValueChange={(itemValue, itemIndex) =>
@@ -146,7 +148,7 @@ const SelectedContactsScreen = ({route}:propsType)=>{
 
         {/* submit */}
         <Pressable 
-          onPress={onPressedSave}
+          onPress={(()=>onPressedSave())}
           className='w-14 h-14 border-[#f00100] border-[1px] self-center rounded-full items-center justify-center'
         >
           <View className='b w-12 h-12 bg-[#ff6c6c] rounded-full items-center justify-center'>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/func-call-spacing */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-shadow */
@@ -22,8 +23,8 @@ import useBLE from '../../useBLe';
 import CardMenu from './CardMenu';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import CustomModal from './CustomModal';
-import { Contact,getAll} from 'react-native-contacts';
 import {GetContactsFromDatabse} from '../../database/SQLite_DB';
+import { ContactsModelModified } from '../../database/Model';
 
 type propType={
   remainingTime:any,
@@ -39,14 +40,16 @@ type propType={
     const [theme, setTheme]=React.useState(Appearance.getColorScheme);
     const [key, setKey] = useState(0);
     const [sendAlertHelp,setSendAlertHelp]=React.useState(false);
-    const [isModalVisible,setModalVisible]=React.useState(true);
-    const [retrivedPriorityContacts, setRetrivedPriorityContacts]=React.useState<Contact[]>([]);
-    const [retrieved,setRetrieved]=React.useState<Contact[]>([]);
+    const [isModalVisible,setModalVisible]=React.useState(false);
+    const [retrivedPriorityContacts, setRetrivedPriorityContacts]=React.useState<ContactsModelModified[]>([]);
+    const [retrieved,setRetrieved]=React.useState<any>([]);
 
     // get global state data
     const {
           isDeviceConnected,
           messageData,
+          currentRoute,setCurrentRoute,
+          priorityContacts,setPriorityContacts,
     } = useContext(AppContext);
 
     const Navigation = useNavigation();
@@ -58,33 +61,37 @@ type propType={
 
     });
 
-    // method to get all user contacts from phone
-    const HandleRetriveAllUserContacts=useMemo(()=>{
-      getAll()
-      .then((value)=>{
-        // console.log(value);
+    // called automatically on every change of state
+    // DON'T DELETE THIS METHOD, IT HANDLES MODAL POPUP
+    const HandleRemoveModal=useMemo(()=>{
+      // DON'T DELETE THIS METHOD, IT HANDLES MODAL POPUP
+      setTimeout(() => {
+        if (priorityContacts.length<=0) {
+          setModalVisible(true);
+          console.log('am executed for modal');
+        }
+      },10000);
+    },[priorityContacts.length]);
 
-      })
-      .catch((e)=>{
-        console.log(e.message);
-      });
-    },[]);
+    // const HandleSetCurrentRoute=useMemo(()=>{
+    //   setTimeout(() => {
+    //     setCurrentRoute(Navigation.getState().routes[0].name);
+    //   },3000);
 
-    const HandleRetrivePriorityContactsFromDatabase=useMemo(async ()=>{
+    // },[Navigation, setCurrentRoute]);
+
+    const HandleRetrivePriorityContactsFromDatabase=useCallback(async ()=>{
       await GetContactsFromDatabse('contacts','')
       .then((value)=>{
-        console.log(value);
+        setPriorityContacts(value);
       })
       .catch((e)=>{
         console.log(e.message);
       });
 
-    },[]);
+    },[setPriorityContacts]);
 
-    const DeviceInformation = useCallback(()=>{
-      getDeviceInfor();
-
-    },[getDeviceInfor]);
+    const DeviceInformation = useMemo(()=>getDeviceInfor(),[getDeviceInfor]);
 
     const renderTime = ({remainingTime}:propType) => {
       if (remainingTime === 0) {
@@ -103,7 +110,7 @@ type propType={
     };
 
     // method to handle alert Help sent
-    const HandleSendAlertHelp=useCallback(()=>{
+    const HandleSendAlertHelp=useMemo(()=>{
       
       if(sendAlertHelp){
         // TODO: send msg and call logic
@@ -129,19 +136,13 @@ type propType={
 
     // use effect
     useEffect(() => {
-      DeviceInformation();
-
       Appearance.addChangeListener((scheme)=>{
         setTheme(scheme.colorScheme);
       });
 
-      HandleSendAlertHelp();
+      console.log((priorityContacts.length>0)?priorityContacts:'Priority Contacts Empty');
 
-      // preven going back to OnBoard Screen
-
-    },[DeviceInformation, HandleSendAlertHelp, Navigation, messageData]);
-
-    // HideModal();
+    },[DeviceInformation, HandleRetrivePriorityContactsFromDatabase, messageData, priorityContacts]);
 
     const handleMenuCardPressed=(args:String)=>{
       if (args === 'map'){
@@ -152,8 +153,6 @@ type propType={
         navigation.navigate('BlueToothScreen');
       }
     };
-
-    // console.log(sendAlertHelp);
 
     return (
       <SafeAreaView
@@ -239,10 +238,9 @@ type propType={
         
         </View>
         {/* modal display */}
-        <CustomModal 
-          isVisibleStatus={isModalVisible} 
-          operation={HandleOnPressedModalEvent}/>
-
+          
+        <CustomModal isVisibleStatus={isModalVisible} operation={HandleOnPressedModalEvent} />
+         
       </SafeAreaView>
     );
   };

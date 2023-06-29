@@ -27,6 +27,8 @@ export const creatContactsTable = async (table: string, query: string) => {
                 `CREATE TABLE IF NOT EXISTS ${table}(
                         rowID INTEGER PRIMARY KEY AUTOINCREMENT,
                         recordID VARCHAR(20),
+                        contactName VARCHAR(20),
+                        contactNumber VARCHAR(20),
                         contactPriority BOOLEAN,
                         createdAt TIMESTAMP CURRENT_TIMESTAMP
                     )`,
@@ -142,11 +144,12 @@ export const UpdatePermissionsFromDatabse=async(table:string,data:PermissionMode
 
 //save into table
 export const SaveContactToDatabse=async(table:string,data:ContactsModelModified,query:string)=>{
+    
     try {
         (await db).transaction(tx =>{
             tx.executeSql(
-                `INSERT INTO ${table}(recordID,contactPriority) VALUES(?,?)`,
-                [data.recordID,data.contactPriority],
+                `INSERT INTO ${table}(recordID,contactName,contactNumber,contactPriority) VALUES(?,?,?,?)`,
+                [data.recordID,data.contactName,data.contactNumber,data.contactPriority],
                 ()=>{
                     console.log(`${table}` + ' ' + 'table inserted with data successfully');
                     ToastAndroid.show(`Contact Set as ${(data.contactPriority)?'High':'Low'} Priority`,ToastAndroid.SHORT);
