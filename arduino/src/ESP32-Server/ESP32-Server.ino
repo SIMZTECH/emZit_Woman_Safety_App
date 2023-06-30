@@ -11,9 +11,10 @@
 #define LED_CONNECTION_STATUS 27
 #define LED_DANGER_INDICATOR 25
 #define MUSCLE_SENSOR_PIN_SIGNAL 34
+#define LED_SENSOR_INDICATOR 23
 
 // Threshold Configurations
-#define BEATS_PER_MINUTE_THRESHOLD 75
+#define BEATS_PER_MINUTE_THRESHOLD 50
 #define MUSCLE_SENSOR_THRESHOLD 4000
 
 // create MAX30105 instance
@@ -110,6 +111,8 @@ void setup() {
   Serial.begin(115200);
 
   pinMode(LED_CONNECTION_STATUS, OUTPUT);
+  pinMode(LED_DANGER_INDICATOR, OUTPUT);
+  pinMode(LED_SENSOR_INDICATOR, OUTPUT);
 
   Serial.println("Starting Server");
   initBLE();
@@ -161,16 +164,21 @@ void loop()
       // delay(3);
     } // end of running logic
 
-
     if (irValue < 50000)
     {
       // TODO::add LED to indicate finger attached to sensor
-
       Serial.print(" No finger?");
       Serial.print("\n");
+      digitalWrite(LED_SENSOR_INDICATOR, LOW);
+
+      // notify zero 
+      data_characteristic->setValue("No Readings");
+      data_characteristic->notify();
+      digitalWrite(LED_DANGER_INDICATOR, LOW);
     }
     else
     {
+      digitalWrite(LED_SENSOR_INDICATOR, HIGH);
       Serial.print("BPM:");
       Serial.print(beatsPerMinute);
       Serial.print("\n");
@@ -179,21 +187,24 @@ void loop()
       Serial.print("\n");
 
       // TODO::Broadcast Readings to the App
-      if(beatsPerMinute>75 && newMuscleSensorReading<3000){
-        data_characteristic->setValue("danger");
+      if(beatsPerMinute>BEATS_PER_MINUTE_THRESHOLD && newMuscleSensorReading<MUSCLE_SENSOR_THRESHOLD){
+        digitalWrite(LED_DANGER_INDICATOR, HIGH);
+        data_characteristic->setValue("1");
         data_characteristic->notify();
+        
       }else{
-        data_characteristic->setValue("no danger");
+        data_characteristic->setValue("0");
         data_characteristic->notify();
+        digitalWrite(LED_DANGER_INDICATOR, LOW);
       }
 
     }
-
   } // end of connection
 
   if(!deviceConnected)
   {
     digitalWrite(LED_CONNECTION_STATUS, LOW);
+    digitalWrite(LED_DANGER_INDICATOR, LOW);
   }
 
   if (!deviceConnected && oldDeviceConnected)

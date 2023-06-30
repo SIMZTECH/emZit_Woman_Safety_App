@@ -41,16 +41,20 @@ type propType={
     const [key, setKey] = useState(0);
     const [sendAlertHelp,setSendAlertHelp]=React.useState(false);
     const [isModalVisible,setModalVisible]=React.useState(false);
-    const [retrivedPriorityContacts, setRetrivedPriorityContacts]=React.useState<ContactsModelModified[]>([]);
-    const [retrieved,setRetrieved]=React.useState<any>([]);
 
     // get global state data
+    type propsContext={
+      isDeviceConnected:Boolean,
+      messageData:String,
+      priorityContacts:ContactsModelModified[],
+      setPriorityContacts:any,
+
+    }
     const {
           isDeviceConnected,
           messageData,
-          currentRoute,setCurrentRoute,
           priorityContacts,setPriorityContacts,
-    } = useContext(AppContext);
+    }:propsContext = useContext(AppContext);
 
     const Navigation = useNavigation();
 
@@ -60,36 +64,6 @@ type propType={
       })
 
     });
-
-    // called automatically on every change of state
-    // DON'T DELETE THIS METHOD, IT HANDLES MODAL POPUP
-    const HandleRemoveModal=useMemo(()=>{
-      // DON'T DELETE THIS METHOD, IT HANDLES MODAL POPUP
-      setTimeout(() => {
-        if (priorityContacts.length<=0) {
-          setModalVisible(true);
-          console.log('am executed for modal');
-        }
-      },10000);
-    },[priorityContacts.length]);
-
-    // const HandleSetCurrentRoute=useMemo(()=>{
-    //   setTimeout(() => {
-    //     setCurrentRoute(Navigation.getState().routes[0].name);
-    //   },3000);
-
-    // },[Navigation, setCurrentRoute]);
-
-    const HandleRetrivePriorityContactsFromDatabase=useCallback(async ()=>{
-      await GetContactsFromDatabse('contacts','')
-      .then((value)=>{
-        setPriorityContacts(value);
-      })
-      .catch((e)=>{
-        console.log(e.message);
-      });
-
-    },[setPriorityContacts]);
 
     const DeviceInformation = useMemo(()=>getDeviceInfor(),[getDeviceInfor]);
 
@@ -112,7 +86,7 @@ type propType={
     // method to handle alert Help sent
     const HandleSendAlertHelp=useMemo(()=>{
       
-      if(sendAlertHelp){
+      if(sendAlertHelp && messageData=='1'){
         // TODO: send msg and call logic
         setSendAlertHelp(false);
         setTimeout(() => {
@@ -120,7 +94,7 @@ type propType={
           console.log("help please");
         },2000); 
       }
-    },[sendAlertHelp]);
+    },[messageData,sendAlertHelp]);
 
     const HandleOnPressedModalEvent=((args:any)=>{
       if(args==='isVisibleStatus'){
@@ -133,16 +107,21 @@ type propType={
         setModalVisible(false);
       }
     });
+    const handleRemoveModal=useMemo(()=>{
+       // open modal
+       if (priorityContacts.length<=0){
+        setModalVisible(true);
+       }
 
-    // use effect
+    },[priorityContacts.length])
+
     useEffect(() => {
+
       Appearance.addChangeListener((scheme)=>{
         setTheme(scheme.colorScheme);
       });
 
-      console.log((priorityContacts.length>0)?priorityContacts:'Priority Contacts Empty');
-
-    },[DeviceInformation, HandleRetrivePriorityContactsFromDatabase, messageData, priorityContacts]);
+    },[DeviceInformation,messageData,priorityContacts]);
 
     const handleMenuCardPressed=(args:String)=>{
       if (args === 'map'){
@@ -153,6 +132,14 @@ type propType={
         navigation.navigate('BlueToothScreen');
       }
     };
+
+    if(priorityContacts.length>0){
+      priorityContacts.map((value)=>{
+        console.log("phone name:"+value.contactName+'\n'+value.contactNumber);
+      });
+    }
+
+    console.log("contacts length:"+priorityContacts.length);
 
     return (
       <SafeAreaView
@@ -190,7 +177,7 @@ type propType={
             </View>
 
             {/* display timer if device connected */}
-            {true &&
+            {(messageData=='1' && isDeviceConnected) &&
                 <CountdownCircleTimer
                   isPlaying
                   key={key}
@@ -204,7 +191,6 @@ type propType={
                   {renderTime}
                 </CountdownCircleTimer>
             }
-
           </View>
 
           <Text className='b mb-4 bg-[#f00100] px-2 items-center rounded-sm text-white mt-2 font-medium shadow-md'>{messageData}</Text>
@@ -220,7 +206,7 @@ type propType={
             args={"esp32"}
             operation={((param: String) => {
               handleMenuCardPressed(param);
-            })} />
+            })}/>
 
           <CardMenu
             deviceStatus={isDeviceConnected}

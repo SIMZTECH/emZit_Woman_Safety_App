@@ -42,6 +42,7 @@ export const GlobalStateProvider=({children})=>{
     const [boxValue,setBoxValue] = React.useState<number>(0);
     const [currentRoute,setCurrentRoute] = React.useState<string>('');
     const [priorityContacts,setPriorityContacts] = React.useState<ContactsModelModified[]>([]);
+    const [allUserContacts,setAllUserContacts]=React.useState<Contact[]>([]);
 
   return (
     <AppContext.Provider value={{
@@ -61,6 +62,8 @@ export const GlobalStateProvider=({children})=>{
         smsPermissions,setSmsPermissions,
         currentRoute,setCurrentRoute,
         priorityContacts,setPriorityContacts,
+        allUserContacts,setAllUserContacts,
+        
     }}>
       {children}
     </AppContext.Provider>

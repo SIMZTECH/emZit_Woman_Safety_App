@@ -4,54 +4,53 @@
 import {StyleSheet, Text, View } from 'react-native';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { GetContactsFromDatabse, deleteContactFromDatabase } from '../../database/SQLite_DB';
-import { ContactsModelModified } from '../../database/Model';
 import PrioritySingleContact from './PrioritySingleContact';
 import { AppContext } from '../../../global/GlobalState';
+import { ContactsModelModified } from '../../database/Model';
+
+type propsContext={
+  priorityContacts:ContactsModelModified[],
+  setPriorityContacts:any,
+
+}
 
 const PriorityContacts = () => {
-  const [contactsRetrieved,setContactsRetrieved]=React.useState<ContactsModelModified[]>([]);
-
   // get global state data
   const {
+    priorityContacts,
     setPriorityContacts,
-} = React.useContext(AppContext);
+  }:propsContext = React.useContext(AppContext);
 
-  const handleRetrieveData=useCallback(async()=>{
-    // retrieve data
-    await GetContactsFromDatabse('contacts','')
-    .then((value)=>{
-      setContactsRetrieved(value);
-      // set global context to hold retrieved data
-      if(value.length>0){
-        setPriorityContacts(value);
-      }
-    });
-  },[setPriorityContacts]);
-
-  const handleDeleteContact=(_data:String)=>{
-    deleteContactFromDatabase('contacts',_data,'');
-    // update UI
-    handleRetrieveData();
-    console.log(_data);
+  const removeItemFromUIContent=(_ID:String)=>{
+    let copyObject=priorityContacts;
+    let res=copyObject.findIndex((value)=>value.recordID==_ID);
+    copyObject.splice(res,1);
+    setPriorityContacts(copyObject);
+    console.log('deletedIndex:'+res);
+    console.log(copyObject);
   };
 
-  useEffect(()=>{
-    // retrieve data
-    handleRetrieveData();
+  const handleDeleteContact=((_data:String)=>{
 
+    deleteContactFromDatabase('contacts',_data,'');
+    removeItemFromUIContent(_data);
+    console.log("record deleted:" + _data);
   });
 
+  useEffect(()=>{
+
+  },[priorityContacts,setPriorityContacts]);
   // console.log(contactsRetrieved);
 
   return (
     <View className='pt-4 px-2 flex-1 bg-[#eff2fa]'>
       <View className='b flex-row justify-between pb-2 pt-2'>
         <Text className='b text-[#c3c6d3] text-[15px]'>Max 5</Text>
-        <Text className='b text-[#c3c6d3] text-[15px]'>Total {contactsRetrieved?.length}/5</Text>
+        <Text className='b text-[#c3c6d3] text-[15px]'>Total {priorityContacts?.length}/5</Text>
       </View>
       <View className='flex-1 pt-4'>
-        {(contactsRetrieved?.length > 0) ? (
-          contactsRetrieved.map((value,index) => <PrioritySingleContact data={value} key={value.rowID} operation={((recordID:String)=>handleDeleteContact(recordID))}/>)
+        {(priorityContacts?.length > 0) ? (
+          priorityContacts.map((value,index) => <PrioritySingleContact data={value} key={value.rowID} operation={handleDeleteContact}/>)
         ) : (
           <View className='mt-24 items-center'>
             <Text className='b text-[24px] text-center text-[#ffffffa1] font-bold'> NO PRIORITY CONTACTS ADDED </Text>

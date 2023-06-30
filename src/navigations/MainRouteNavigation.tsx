@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { StyleSheet} from 'react-native';
 import React, { useCallback, useEffect} from 'react';
@@ -5,8 +6,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeStack from './HomeStack';
 import { SliderScreen } from '../pages/onBoardScreen/index';
 import { PermissionModel } from '../database/Model';
-import {GetPermissionsFromDatabse} from '../database/SQLite_DB';
+import {GetPermissionsFromDatabse,GetContactsFromDatabse} from '../database/SQLite_DB';
 import LoaderScreen from '../pages/indicatorScreen/LoaderScreen';
+import { AppContext } from '../../global/GlobalState';
+import { Contact, getAll} from 'react-native-contacts';
 
 const Stack=createStackNavigator();
 
@@ -15,57 +18,62 @@ const MainRouteNavigation = () => {
   const [permissionsData,setPermissionsData]=React.useState<PermissionModel[]>([]);
   const [checker,setChecker]=React.useState<Boolean>(false);
 
+    // get global state data
+  const {
+    setPriorityContacts,
+    setAllUserContacts,
+  } = React.useContext(AppContext);
+
+  
+
   const handleRetriveData=useCallback(()=>{
     GetPermissionsFromDatabse('permissions','')
     .then((res)=>{
-
         setPermissionsData(res);
         setChecker(true);
     });
   },[]);
 
+
+  const retrieveAllUserContacts = React.useCallback(() => {
+    // get all user contacts
+    getAll()
+      .then((value) => {
+        setAllUserContacts(value);
+        console.log('all user contacts loaded');
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  }, [setAllUserContacts]);
+
   useEffect(() => {
+
     handleRetriveData();
-   
-  }, [handleRetriveData])
+
+    // get all priority contacts from databse
+    GetContactsFromDatabse('contacts','')
+    .then((value)=>{
+      console.log(value.length>0?value:'no priotity contacts set');
+      setPriorityContacts(value);
+    })
+    .catch((e)=>{
+      console.log(e.message);
+    });
+
+  },[handleRetriveData, setPriorityContacts]);
   
-
-  console.log(permissionsData);
-
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false
       }}
     >
-      {(checker) ? (
-        (permissionsData.length > 0) ? (
-          (permissionsData[0].permissionState && permissionsData[1].permissionState && permissionsData[2].permissionState) ? (
-            <>
-              <Stack.Screen name="HomeStack" component={HomeStack}/>
-              <Stack.Screen name="SliderScreen" component={SliderScreen}/>
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="SliderScreen" component={SliderScreen}/>
-              <Stack.Screen name="HomeStack" component={HomeStack}/>
-            </>
-          )
-        ) : (
-            <>
-              <Stack.Screen name="SliderScreen" component={SliderScreen} />
-              <Stack.Screen name="HomeStack" component={HomeStack} />
-            </>
-        )
-      ) : (
-        <>
-          <Stack.Screen name="LoaderScreen" component={LoaderScreen}/>
-        </>
-        
-      )
-      }
+      <Stack.Screen name="SliderScreen" component={SliderScreen} />
+      <Stack.Screen name="HomeStack" component={HomeStack} />
     </Stack.Navigator>
-  )
+  );
+
 }
 
 export default MainRouteNavigation;

@@ -19,51 +19,23 @@ type propsType={
   navigation:any
 }
 
-
-
 const AllUserContactsScreen = ({navigation}:propsType) => {
   const Navigation = useNavigation();
  
-  const[allUserContacts,setAllUserContacts]=useState<Contact[]>([]);
   const [theme, setTheme]=React.useState(Appearance.getColorScheme);
 
-  const {
-    currentRoute,setCurrentRoute,
-} = React.useContext(AppContext);
+  const { allUserContacts,setAllUserContacts}:any= React.useContext(AppContext);
 
-  const getUserContacts=useMemo(async()=>{
-    getAll()
-    .then((contacts) => {
-      if (allUserContacts.length<=0) {
-        setAllUserContacts(contacts);
-        console.log('contacts loaded');
-      } 
-      return
-    })
-    .catch((e) => {
-      Alert.alert('Warning!', e.message());
-    });
-  },[]);
-
-  // const HandleSetCurrentRoute=useMemo(()=>{
-  //   setTimeout(() => {
-  //     setCurrentRoute(Navigation.getState().routes[0].name);
-  //   },3000);
-
-  // },[Navigation, setCurrentRoute]);
-
-
+  
   useEffect(() => {
-    getUserContacts;
 
     Appearance.addChangeListener((scheme)=>{
       setTheme(scheme.colorScheme);
     });
    
+  },[allUserContacts,setAllUserContacts]);
 
-  },[getUserContacts]);
-
-  const getItem=(_data, index)=>{
+  const getItem=(_data:any, index:number)=>{
     return _data[index];
   };
   // console.log("data\t"+JSON.stringify(allUserContacts));

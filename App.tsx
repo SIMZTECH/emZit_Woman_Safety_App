@@ -9,7 +9,6 @@ import 'react-native-gesture-handler';
 import { creatContactsTable, dropTable,creatPermissionTable} from './src/database/SQLite_DB';
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
 import MainRouteNavigation from './src/navigations/MainRouteNavigation';
-import {enableLatestRenderer} from 'react-native-maps';
 import { enableScreens } from 'react-native-screens';
 import SMS from './src/screens/smsTesting/SMS';
 import SplashScreen from 'react-native-splash-screen';
@@ -23,8 +22,7 @@ const App = () => {
   const tableCreation = useCallback(() => {
 
     creatContactsTable('contacts', '');
-    creatPermissionTable('permissions', '');
-
+    // creatPermissionTable('permissions', '');
   }, []);
 
   useEffect(() => {
