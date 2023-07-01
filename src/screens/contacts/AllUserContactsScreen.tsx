@@ -20,30 +20,30 @@ type propsType={
 }
 
 const AllUserContactsScreen = ({navigation}:propsType) => {
+
   const Navigation = useNavigation();
  
   const [theme, setTheme]=React.useState(Appearance.getColorScheme);
 
-  const { allUserContacts,setAllUserContacts}:any= React.useContext(AppContext);
-
+  const { allUserContacts,setAllUserContacts,renderKey,setRenderKey}:any= React.useContext(AppContext);
   
   useEffect(() => {
 
     Appearance.addChangeListener((scheme)=>{
       setTheme(scheme.colorScheme);
     });
+
+    console.log("current key:"+renderKey);
    
-  },[allUserContacts,setAllUserContacts]);
+  },[]);
 
   const getItem=(_data:any, index:number)=>{
     return _data[index];
   };
   // console.log("data\t"+JSON.stringify(allUserContacts));
-  // console.log("Current Route:"+currentRoute);
-
   return (
     <View className={`flex-1 pt-4 ${(theme === 'dark') ? 'bg-black' : 'bg-[#eff2fa]'} `}>
-      {(allUserContacts.length > 0 ) ? (
+      {(allUserContacts.length>0) ? (
           <VirtualizedList
             data={allUserContacts}
             initialNumToRender={20}

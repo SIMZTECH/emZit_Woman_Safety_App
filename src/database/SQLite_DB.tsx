@@ -239,7 +239,8 @@ export const RetrieveSingleContactFromDatabse=async(table:string,query:string,id
 };
 
 // delete item from database
-export const deleteContactFromDatabase=async(table:string,id:String,query:string)=>{
+export const DeleteContactFromDatabase=async(table:string,id:String,query:string):Promise <Boolean>=>{
+
     try {
         (await db).transaction(tx=>{
             tx.executeSql(
@@ -258,6 +259,7 @@ export const deleteContactFromDatabase=async(table:string,id:String,query:string
     } catch (error) {
         
     }
+
 };
 
 
@@ -286,7 +288,7 @@ export const dropTable=async(table:string,query:string)=>{
 
 export default {
     creatContactsTable,
-    deleteContactFromDatabase,
+    DeleteContactFromDatabase,
     SaveContactToDatabse,
     GetContactsFromDatabse,
     dropTable,

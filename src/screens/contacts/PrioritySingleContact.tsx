@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { StyleSheet, Text, View, Image, Pressable} from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable, Alert} from 'react-native';
 import React from 'react';
 import {woman} from '../../../assets/imgaes/UIDesign/OtherImages';
 import { ContactsModelModified} from '../../database/Model';
@@ -12,6 +12,7 @@ type propsType={
 };
 
 const PrioritySingleContact= ({data,operation}:propsType) => {
+
   return (
     <View className='flex-row items-center h-14  px-2 pt-2 pb-2 mt-3 bg-white shadow-md rounded-md'>
       <View className='b flex-row items-center space-x-5 flex-1'>
@@ -33,7 +34,19 @@ const PrioritySingleContact= ({data,operation}:propsType) => {
         </View>
       </View>
       <Pressable
-      onPress={()=>operation(data.recordID)}
+      onPress={()=>{
+        Alert.alert(
+          'Warning!',
+          `Are you sure, you want to delete`,
+          [
+            {text:'Yes', onPress:(()=>{
+              operation(data.recordID)
+            })},
+            {text:'No', onPress:(()=>{return})}
+          ]
+        );
+        
+      }}
        className="h-full items-center justify-center w-12"
       >
         <AntDesign name="delete" size={20} color='#ff6c6c'/>

@@ -35,12 +35,13 @@ type propType={
   LogBox.ignoreLogs(['new NativeEventEmitter']);
 
   const App = ({navigation}) => {
-    const {getDeviceInfor,requestPermissions}=useBLE();
+    const {getDeviceInfor}=useBLE();
 
     const [theme, setTheme]=React.useState(Appearance.getColorScheme);
     const [key, setKey] = useState(0);
     const [sendAlertHelp,setSendAlertHelp]=React.useState(false);
     const [isModalVisible,setModalVisible]=React.useState(false);
+    const [allPriority,setAllPriority]=React.useState<ContactsModelModified[]>([]);
 
     // get global state data
     type propsContext={
@@ -53,7 +54,7 @@ type propType={
     const {
           isDeviceConnected,
           messageData,
-          priorityContacts,setPriorityContacts,
+          renderKey,setRenderKey,
     }:propsContext = useContext(AppContext);
 
     const Navigation = useNavigation();
@@ -64,8 +65,6 @@ type propType={
       })
 
     });
-
-    const DeviceInformation = useMemo(()=>getDeviceInfor(),[getDeviceInfor]);
 
     const renderTime = ({remainingTime}:propType) => {
       if (remainingTime === 0) {
@@ -86,7 +85,7 @@ type propType={
     // method to handle alert Help sent
     const HandleSendAlertHelp=useMemo(()=>{
       
-      if(sendAlertHelp && messageData=='1'){
+      if (sendAlertHelp && messageData=='1'){
         // TODO: send msg and call logic
         setSendAlertHelp(false);
         setTimeout(() => {
@@ -96,50 +95,53 @@ type propType={
       }
     },[messageData,sendAlertHelp]);
 
+    const HandleRetrivePriorityContactsFromDB=useMemo(()=>{
+      if (renderKey>=0) {
+        GetContactsFromDatabse('contacts', '')
+          .then((value) => {
+            (value.length>0)?setModalVisible(false):setModalVisible(true);
+            setAllPriority(value);
+            console.log("retrieving working...");
+          });
+      }
+    },[renderKey]);
+
     const HandleOnPressedModalEvent=((args:any)=>{
-      if(args==='isVisibleStatus'){
+      if (args === 'isVisibleStatus'){
         setModalVisible(false);
         console.log(args);
-      }else{
+      } else {
         // navigation.navigate('BlueToothScreen');
         console.log(args);
         navigation.navigate('TabNavigationRoute',{screen:'Contacts'});
         setModalVisible(false);
       }
     });
-    const handleRemoveModal=useMemo(()=>{
-       // open modal
-       if (priorityContacts.length<=0){
-        setModalVisible(true);
-       }
-
-    },[priorityContacts.length])
-
-    useEffect(() => {
-
-      Appearance.addChangeListener((scheme)=>{
-        setTheme(scheme.colorScheme);
-      });
-
-    },[DeviceInformation,messageData,priorityContacts]);
 
     const handleMenuCardPressed=(args:String)=>{
       if (args === 'map'){
         navigation.navigate('Map');
       }
       
-      if (args==='esp32'){
+      if (args === 'esp32'){
         navigation.navigate('BlueToothScreen');
       }
     };
 
-    if(priorityContacts.length>0){
-      priorityContacts.map((value)=>{
-        console.log("phone name:"+value.contactName+'\n'+value.contactNumber);
-      });
-    }
+    useEffect(() => {
 
-    console.log("contacts length:"+priorityContacts.length);
+      getDeviceInfor();
+
+      Appearance.addChangeListener((scheme)=>{
+        setTheme(scheme.colorScheme);
+      });
+
+    },[allPriority, getDeviceInfor, messageData, renderKey]);
+
+    console.log(allPriority);
+    console.log("modal status:"+isModalVisible);
+    console.log("render key at Home:"+renderKey);
+
 
     return (
       <SafeAreaView
@@ -177,7 +179,7 @@ type propType={
             </View>
 
             {/* display timer if device connected */}
-            {(messageData=='1' && isDeviceConnected) &&
+            {(messageData=='1' && isDeviceConnected && allPriority.length>0) &&
                 <CountdownCircleTimer
                   isPlaying
                   key={key}
@@ -241,3 +243,7 @@ const styles = StyleSheet.create({
 
   }
 });
+function check(permission: any, Permission: any) {
+  throw new Error('Function not implemented.');
+}
+

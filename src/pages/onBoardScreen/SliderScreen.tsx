@@ -42,7 +42,6 @@ const SliderScreen = ({navigation}) => {
     const blueToothPermission=useCallback(async()=>{
         requestLocationPermissions((permssionStatus:boolean)=>{
             setLocationPermission(permssionStatus);
-            handlePermissionDBActivities("bluetoothPermission",permssionStatus);
         });
 
     },[requestLocationPermissions, setLocationPermission]);
@@ -50,32 +49,15 @@ const SliderScreen = ({navigation}) => {
     const contactsPermissions=useCallback(async()=>{
         requestContactsPermissions((permssionStatus:boolean)=>{
             setContactsPermission(permssionStatus);
-            handlePermissionDBActivities("contactsPermissions",permssionStatus);
         });
     },[requestContactsPermissions, setContactsPermission]);
 
     const smsPermission=useCallback(async()=>{
         requestSMSPermissions((permssionStatus:boolean)=>{
             setSmsPermissions(permssionStatus);
-            handlePermissionDBActivities("smsPermission",permssionStatus);
+            // handlePermissionDBActivities("smsPermission",permssionStatus);
         })
     },[requestSMSPermissions, setSmsPermissions]);
-
-    const handlePermissionDBActivities=(_permission:string,permissionStatus:boolean)=>{
-        RetrieveSinglePermissionFromDatabse("permissions",'',_permission)
-        .then((res)=>{
-            const data:PermissionModel={
-                permissionID: 0,
-                permissionName:_permission,
-                permissionState:permissionStatus,
-            };
-            if(res.length>0){
-                UpdatePermissionsFromDatabse('permissions',data,'');
-            }else{
-                SavePermissionsToDatabse('permissions',data,'');
-            }
-        });
-    };
 
     useEffect(()=>{
         // request permissions
@@ -83,12 +65,6 @@ const SliderScreen = ({navigation}) => {
         smsPermission();
         blueToothPermission();
     },[blueToothPermission, contactsPermissions, smsPermission]);
-
-    GetPermissionsFromDatabse("permissions",'')
-    .then((valenc)=>{
-        console.log(valenc);
-    });
-
 
   return (
       <View style={[styles.container, { width: width, height: height }]} className='bg-white flex-1'>

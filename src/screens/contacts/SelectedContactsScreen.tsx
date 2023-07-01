@@ -16,6 +16,7 @@ import { Contact } from 'react-native-contacts';
 // import { ContactsModel } from '../../database/Model';
 import { ContactsModelModified } from '../../database/Model';
 import {SaveContactToDatabse,RetrieveSingleContactFromDatabse} from '../../database/SQLite_DB';
+import { AppContext } from '../../../global/GlobalState';
 
 type propsType={
   route:any,
@@ -32,6 +33,8 @@ const SelectedContactsScreen = ({route}:propsType)=>{
 
   const Navigation=useNavigation();
 
+  const {renderKey,setRenderKey}:number= React.useContext(AppContext);
+
   useLayoutEffect(() => {
     Navigation.setOptions({
       headerShown:false,
@@ -47,7 +50,6 @@ const SelectedContactsScreen = ({route}:propsType)=>{
       });
 
   },[recordID])
-  
 
   useEffect(() => {
     
@@ -56,8 +58,9 @@ const SelectedContactsScreen = ({route}:propsType)=>{
     Appearance.addChangeListener((scheme)=>{
       setTheme(scheme.colorScheme);
     });
- 
-  },[getSingleContact]);
+
+    console.log("key incremented:"+renderKey);
+  },[getSingleContact, renderKey]);
   
 
   const onPressedSave=async()=>{
@@ -84,6 +87,8 @@ const SelectedContactsScreen = ({route}:propsType)=>{
           contactNumber:validatedPhonenumber
         };
         await SaveContactToDatabse('contacts', data, '');
+        // increament render key
+        setRenderKey(renderKey+1);
         Navigation.goBack();
       }
     }
