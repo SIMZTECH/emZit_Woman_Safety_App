@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native';
 import BlueToothDevice from './BlueToothDevice';
 import useBLE from '../../useBLe';
+import ScreenHeader from '../../components/ScreenHeader/ScreenHeader';
 
 
 // remove indicator global scope
@@ -70,15 +71,7 @@ const BlueToothScreen = () => {
 
   return (
       <SafeAreaView className="bg-[#eff2fa] flex-1">
-          <View className="b px-3 pt-3 pb-2 flex-row space-x-8 items-center border-b-[0.5px] border-[#c3c6d3]">
-              <TouchableOpacity
-                  onPress={() => Navigation.goBack()}
-                  className="flex-row items-center">
-                  <Entypo name="chevron-thin-left" size={25} color={'#f00100'} />
-                  <Text className="text-[17px] text-[#f00100] font-medium">Back</Text>
-              </TouchableOpacity>
-              <Text className="text-[20px] font-medium text-black">Bluetooth</Text>
-          </View>
+          <ScreenHeader headerTitle={'Bluetooth'} />
 
           <View className="px-3">
               <View className="mt-8">
@@ -98,7 +91,7 @@ const BlueToothScreen = () => {
                   </View>
               </View>
               <View className="mt-3 flex-[50%] pb-3">
-                  {(availableBluetoothDevices?.length > 0)?(
+                  {(availableBluetoothDevices?.length > 0) ? (
                       <Pressable
                           onPress={async () => {
                               bluetoothDeviceServices(availableBluetoothDevices[0]);

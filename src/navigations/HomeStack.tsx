@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Contact,getAll } from 'react-native-contacts';
 import { AppContext } from '../../global/GlobalState';
 import { GetContactsFromDatabse } from '../database/SQLite_DB';
+import SearchContactSreen from '../screens/contacts/searchScreen/SearchContactSreen';
 
  // get global state data
  type propsContext={
@@ -59,6 +60,7 @@ const HomeStack = () => {
     <Stack.Screen name='Map' component={Map}/>
     <Stack.Screen name='BlueToothScreen' component={BlueToothScreen}/>
     <Stack.Screen name='SelectedScreen' component={SelectedContactsScreen}/>
+    <Stack.Screen name='SearchContactsScreen' component={SearchContactSreen}/>
   </Stack.Navigator>
   );
 }

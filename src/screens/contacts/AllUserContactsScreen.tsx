@@ -8,20 +8,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import React, { useCallback, useEffect, useMemo, useState} from 'react';
-import { Alert,StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList} from 'react-native';
+import { Alert,StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList, TouchableOpacity} from 'react-native';
 import {Contact, getAll} from 'react-native-contacts';
 import { Appearance } from 'react-native';
 import SingleContactComponent from './SingleContactComponent';
 import { AppContext } from '../../../global/GlobalState';
 import { useNavigation } from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 type propsType={
   navigation:any
 }
 
 const AllUserContactsScreen = ({navigation}:propsType) => {
-
-  const Navigation = useNavigation();
  
   const [theme, setTheme]=React.useState(Appearance.getColorScheme);
 
@@ -33,16 +32,30 @@ const AllUserContactsScreen = ({navigation}:propsType) => {
       setTheme(scheme.colorScheme);
     });
 
-    console.log("current key:"+renderKey);
+    console.log('current key:'+renderKey);
    
   },[]);
 
   const getItem=(_data:any, index:number)=>{
     return _data[index];
   };
+
+  const HandleOnPressSearch=()=>{
+    navigation.navigate('SearchContactsScreen');
+  };
   // console.log("data\t"+JSON.stringify(allUserContacts));
   return (
-    <View className={`flex-1 pt-4 ${(theme === 'dark') ? 'bg-black' : 'bg-[#eff2fa]'} `}>
+    <View className={`flex-1 pt-4 ${(theme === 'dark') ? 'bg-black' : 'bg-[#eff2fa]'} pb-8`}>
+      <View className="b px-4 mb-4">
+        <TouchableOpacity 
+        onPress={(()=>HandleOnPressSearch())}
+          className="b bg-white shadow-md flex-row items-center px-3 pt-1 pb-1 space-x-3 justify-center rounded-md"
+        >
+          <AntDesign name='search1' color={'#f00100'} size={33} />
+          <Text className='b text-[17px]'>Search....</Text>
+        </TouchableOpacity>
+      </View>
+
       {(allUserContacts.length>0) ? (
           <VirtualizedList
             data={allUserContacts}

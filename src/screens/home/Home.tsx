@@ -10,7 +10,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import {
-  Alert, Dimensions, Image, LogBox, Pressable, SafeAreaView, StyleSheet,
+  Alert, Dimensions, Image, LogBox, NativeModules, Pressable, SafeAreaView, StyleSheet,
   Text, ToastAndroid, TouchableOpacity, View,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -26,6 +26,9 @@ import CustomModal from './CustomModal';
 import {GetContactsFromDatabse} from '../../database/SQLite_DB';
 import { ContactsModelModified } from '../../database/Model';
 
+// for sending sms
+let SendSMS=NativeModules.DirectSms;
+
 type propType={
   remainingTime:any,
 
@@ -36,12 +39,12 @@ type propType={
 
   const App = ({navigation}) => {
     const {getDeviceInfor}=useBLE();
-
     const [theme, setTheme]=React.useState(Appearance.getColorScheme);
     const [key, setKey] = useState(0);
     const [sendAlertHelp,setSendAlertHelp]=React.useState(false);
     const [isModalVisible,setModalVisible]=React.useState(false);
     const [allPriority,setAllPriority]=React.useState<ContactsModelModified[]>([]);
+    const [SMSBody,SetSMSBody]=React.useState<string>("emZit:Help Help!!!,i am in danger cord:14.77,2.56");
 
     // get global state data
     type propsContext={
@@ -49,8 +52,8 @@ type propType={
       messageData:String,
       priorityContacts:ContactsModelModified[],
       setPriorityContacts:any,
-
     }
+
     const {
           isDeviceConnected,
           messageData,
@@ -89,11 +92,20 @@ type propType={
         // TODO: send msg and call logic
         setSendAlertHelp(false);
         setTimeout(() => {
+
+          allPriority.map((value,_index)=>{
+            if(value.contactPriority==true){
+              // console.log("name:"+value.contactName);
+              // console.log("Number:"+value.contactNumber);
+              SendSMS.sendDirectSms(value.contactNumber,SMSBody);
+            }
+          });
+
           ToastAndroid.show(`Alert Sent Successfully`,ToastAndroid.SHORT);
           console.log("help please");
         },2000); 
       }
-    },[messageData,sendAlertHelp]);
+    },[SMSBody, allPriority, messageData, sendAlertHelp]);
 
     const HandleRetrivePriorityContactsFromDB=useMemo(()=>{
       if (renderKey>=0) {
@@ -142,7 +154,6 @@ type propType={
     console.log("modal status:"+isModalVisible);
     console.log("render key at Home:"+renderKey);
 
-
     return (
       <SafeAreaView
         className={`relative flex-1 ${(theme === 'dark') ? 'bg-black' : 'bg-[#eff2fa]'} `}
@@ -151,13 +162,10 @@ type propType={
         <View className="px-8 pt-3 pb-2 flex-row justify-between bg-white shadow-md">
 
           <View className="flex-row items-center justify-center space-x-2 flex-1">
-
             <Animatable.View animation={'pulse'} iterationCount={'infinite'}  easing={'ease-in'}>
               <FontAwesome5 name='heartbeat' size={24} color={'#ff6c6c'} />
             </Animatable.View>
-
             <Text className="text-[20px] text-[#c3c6d3]">Emergency<Text className="text-[#f00100] font-bold">App</Text></Text>
-
           </View>
 
           <View className="w-10 h-10 bg-blue-400 border-[2px] border-[#f00100] rounded-full overflow-hidden">
@@ -198,6 +206,7 @@ type propType={
           <Text className='b mb-4 bg-[#f00100] px-2 items-center rounded-sm text-white mt-2 font-medium shadow-md'>{messageData}</Text>
           <Text className="text-[20px] font-semibold text-black">Not sure what to do?</Text>
           <Text className="text-[14px] text-[#b4b7c2] mt-2">Read the guide</Text>
+
         </View>
 
         <View className='px-2 flex-row justify-between absolute bottom-3'
@@ -243,7 +252,4 @@ const styles = StyleSheet.create({
 
   }
 });
-function check(permission: any, Permission: any) {
-  throw new Error('Function not implemented.');
-}
 
