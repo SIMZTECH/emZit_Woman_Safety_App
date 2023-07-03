@@ -27,7 +27,7 @@ const Links_Button = ({args,iconName,iconLeftPresent=false,operation,text,iconLe
               }}>
               <View className='flex-row items-center pl-2 space-x-2 h-full'>
                   <FontAwesome5 name={`${iconName}`} size={20} color={'#ff6c6c'} />
-                  <Text className={`${(theme === 'dark') ? 'text-[#eff2fa]' : 'text-[#c3c6d3]'} `}>{text}</Text>
+                  <Text className={`${(theme === 'dark') ? 'text-[#eff2fa]' : 'text-[#767e80]'} `}>{text}</Text>
               </View>
               {iconLeftPresent &&
                   <View className='h-full flex items-end justify-center flex-1 pr-2'>

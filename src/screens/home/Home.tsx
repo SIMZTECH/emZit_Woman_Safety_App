@@ -25,6 +25,7 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import CustomModal from './CustomModal';
 import {GetContactsFromDatabse} from '../../database/SQLite_DB';
 import { ContactsModelModified } from '../../database/Model';
+import Geolocation from 'react-native-geolocation-service';
 
 // for sending sms
 let SendSMS=NativeModules.DirectSms;
@@ -38,13 +39,13 @@ type propType={
   LogBox.ignoreLogs(['new NativeEventEmitter']);
 
   const App = ({navigation}) => {
+
     const {getDeviceInfor}=useBLE();
     const [theme, setTheme]=React.useState(Appearance.getColorScheme);
     const [key, setKey] = useState(0);
     const [sendAlertHelp,setSendAlertHelp]=React.useState(false);
     const [isModalVisible,setModalVisible]=React.useState(false);
     const [allPriority,setAllPriority]=React.useState<ContactsModelModified[]>([]);
-    const [SMSBody,SetSMSBody]=React.useState<string>("emZit:Help Help!!!,i am in danger cord:14.77,2.56");
 
     // get global state data
     type propsContext={
@@ -69,6 +70,17 @@ type propType={
 
     });
 
+
+    // const HandleGetGeoLocation=useCallback(()=>{
+    //   Geolocation.getCurrentPosition((position)=>{
+    //     console.log(`https://www.google.com/maps/search/?api=1&query=${position.coords.latitude}%2C${position.coords.longitude}`);
+    //   },
+    //   (error)=>{
+    //     console.log(error.message);
+    //   });
+
+    // },[]);
+
     const renderTime = ({remainingTime}:propType) => {
       if (remainingTime === 0) {
         // TODO::send alert help
@@ -88,54 +100,64 @@ type propType={
     // method to handle alert Help sent
     const HandleSendAlertHelp=useMemo(()=>{
       
-      if (sendAlertHelp && messageData=='1'){
+      if (sendAlertHelp && messageData == '1') {
         // TODO: send msg and call logic
         setSendAlertHelp(false);
+        
         setTimeout(() => {
+          Geolocation.getCurrentPosition((position) => {
+            let mapURL = `https://www.google.com/maps/search/?api=1&query=${position.coords.latitude}%2C${position.coords.longitude}`;
+            let messageBody = `emZit App:Help Help!! i'm in Danger, here is my loc:${mapURL}`;
 
-          allPriority.map((value,_index)=>{
-            if(value.contactPriority==true){
-              // console.log("name:"+value.contactName);
-              // console.log("Number:"+value.contactNumber);
-              SendSMS.sendDirectSms(value.contactNumber,SMSBody);
-            }
-          });
+            allPriority.map((value, _index) => {
 
-          ToastAndroid.show(`Alert Sent Successfully`,ToastAndroid.SHORT);
-          console.log("help please");
-        },2000); 
+              if (value.contactPriority == true) {
+                SendSMS.sendDirectSms(value.contactNumber, messageBody);
+              }
+            });
+
+            ToastAndroid.show(`Alert Sent Successfully`, ToastAndroid.SHORT);
+            console.log("help please");
+
+          }, ((error) => {
+            console.log(error.message);
+          }));
+
+        }, 2000);
+
       }
-    },[SMSBody, allPriority, messageData, sendAlertHelp]);
 
-    const HandleRetrivePriorityContactsFromDB=useMemo(()=>{
-      if (renderKey>=0) {
+    }, [allPriority, messageData, sendAlertHelp]);
+
+    const HandleRetrivePriorityContactsFromDB = useMemo(() => {
+      if (renderKey >= 0) {
         GetContactsFromDatabse('contacts', '')
           .then((value) => {
-            (value.length>0)?setModalVisible(false):setModalVisible(true);
+            (value.length > 0) ? setModalVisible(false) : setModalVisible(true);
             setAllPriority(value);
             console.log("retrieving working...");
           });
       }
-    },[renderKey]);
+    }, [renderKey]);
 
-    const HandleOnPressedModalEvent=((args:any)=>{
-      if (args === 'isVisibleStatus'){
+    const HandleOnPressedModalEvent = ((args: any) => {
+      if (args === 'isVisibleStatus') {
         setModalVisible(false);
         console.log(args);
       } else {
         // navigation.navigate('BlueToothScreen');
         console.log(args);
-        navigation.navigate('TabNavigationRoute',{screen:'Contacts'});
+        navigation.navigate('TabNavigationRoute', { screen: 'Contacts' });
         setModalVisible(false);
       }
     });
 
-    const handleMenuCardPressed=(args:String)=>{
-      if (args === 'map'){
+    const handleMenuCardPressed = (args: String) => {
+      if (args === 'map') {
         navigation.navigate('Map');
       }
-      
-      if (args === 'esp32'){
+
+      if (args === 'esp32') {
         navigation.navigate('BlueToothScreen');
       }
     };
@@ -147,6 +169,9 @@ type propType={
       Appearance.addChangeListener((scheme)=>{
         setTheme(scheme.colorScheme);
       });
+
+      // get user cordinates
+      // HandleGetGeoLocation();
 
     },[allPriority, getDeviceInfor, messageData, renderKey]);
 

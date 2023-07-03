@@ -20,7 +20,7 @@ const Permissions_Button = ({operation,iconName,text,args,theme}:propsType) => {
               {(args==='contacts') && <AntDesign name={`${iconName}`} size={20} color={'#ff6c6c'} />}
               {(args==='messages') && <FontAwesome5 name={`${iconName}`} size={20} color={'#ff6c6c'} />}
               {(args==='phone') && <FontAwesome5 name={`${iconName}`} size={20} color={'#ff6c6c'} />}
-              <Text className={`${(theme === 'dark') ? 'text-[#eff2fa]' : 'text-[#c3c6d3]'} `}>{text}</Text>
+              <Text className={`${(theme === 'dark') ? 'text-[#eff2fa]' : 'text-[#767e80]'} `}>{text}</Text>
           </View>
           {/* toggle */}
           <View className='h-full flex-1 items-end justify-center pr-3'>
