@@ -7,13 +7,12 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useCallback, useEffect, useMemo, useState} from 'react';
-import { Alert,StyleSheet, Text, View,ActivityIndicator,FlatList,VirtualizedList, TouchableOpacity, TextInput} from 'react-native';
-import {Contact, getAll} from 'react-native-contacts';
+import React, {useEffect} from 'react';
+import {StyleSheet,View,VirtualizedList,TextInput} from 'react-native';
+import {Contact} from 'react-native-contacts';
 import { Appearance } from 'react-native';
 import SingleContactComponent from './SingleContactComponent';
 import { AppContext } from '../../../global/GlobalState';
-import { useNavigation } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 type propsType={

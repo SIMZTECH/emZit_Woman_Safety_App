@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Alert, Pressable, StyleSheet, Text,View } from 'react-native';
-import React, {useState } from 'react';
+import React from 'react';
 import {woman } from '../../../assets/imgaes/UIDesign/OtherImages';
 import { Image } from 'react-native-animatable';
 import Entypo from 'react-native-vector-icons/Entypo'

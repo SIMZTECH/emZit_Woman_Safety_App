@@ -5,15 +5,13 @@
 /* eslint-disable jsx-quotes */
 /* eslint-disable prettier/prettier */
 import { Alert, Pressable, StyleSheet, Text,View } from 'react-native';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, {useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import {Picker} from '@react-native-picker/picker';
 import { Appearance } from 'react-native';
-import { Contact } from 'react-native-contacts';
-// import { ContactsModel } from '../../database/Model';
 import { ContactsModelModified } from '../../database/Model';
 import {SaveContactToDatabse,RetrieveSingleContactFromDatabse} from '../../database/SQLite_DB';
 import { AppContext } from '../../../global/GlobalState';

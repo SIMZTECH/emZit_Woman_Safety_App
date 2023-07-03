@@ -3,7 +3,7 @@
 /* eslint-disable jsx-quotes */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useContext, useEffect, useLayoutEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useLayoutEffect} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Map from '../screens/home/Map';
 import BlueToothScreen from '../screens/home/BlueToothScreen';
@@ -12,8 +12,6 @@ import { SelectedContactsScreen } from '../screens/contacts';
 import { useNavigation } from '@react-navigation/native';
 import { Contact,getAll } from 'react-native-contacts';
 import { AppContext } from '../../global/GlobalState';
-import { GetContactsFromDatabse } from '../database/SQLite_DB';
-import SearchContactSreen from '../screens/contacts/searchScreen/SearchContactSreen';
 
  // get global state data
  type propsContext={
@@ -60,7 +58,6 @@ const HomeStack = () => {
     <Stack.Screen name='Map' component={Map}/>
     <Stack.Screen name='BlueToothScreen' component={BlueToothScreen}/>
     <Stack.Screen name='SelectedScreen' component={SelectedContactsScreen}/>
-    <Stack.Screen name='SearchContactsScreen' component={SearchContactSreen}/>
   </Stack.Navigator>
   );
 }

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import {StyleSheet, Text, View } from 'react-native';
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, {useContext, useEffect, useMemo } from 'react';
 import { GetContactsFromDatabse, DeleteContactFromDatabase } from '../../database/SQLite_DB';
 import PrioritySingleContact from './PrioritySingleContact';
 import { AppContext } from '../../../global/GlobalState';
