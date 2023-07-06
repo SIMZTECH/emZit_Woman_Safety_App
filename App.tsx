@@ -10,9 +10,9 @@ import { creatContactsTable, dropTable,creatPermissionTable} from './src/databas
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
 import MainRouteNavigation from './src/navigations/MainRouteNavigation';
 import { enableScreens } from 'react-native-screens';
-import SMS from './src/screens/smsTesting/SMS';
 import SplashScreen from 'react-native-splash-screen';
 import { Appearance } from 'react-native';
+import MakeCall from './src/screens/callTest/MakeCall';
 enableScreens(false);
 
 
@@ -44,6 +44,7 @@ const App = () => {
         <MainRouteNavigation />
       </NavigationContainer>
       {/* <SMS /> */}
+      {/* <MakeCall /> */}
     </GlobalStateProvider>
 
   );

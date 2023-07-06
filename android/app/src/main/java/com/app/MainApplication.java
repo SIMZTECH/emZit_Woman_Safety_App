@@ -6,6 +6,9 @@ import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.app.MySendSmsPackage;
 // import com.github.reactnativecommunity.location.RNLocationPackage;
 
+// added manually for making phone call
+import com.github.wumke.RNImmediatePhoneCall.RNImmediatePhoneCallPackage;
+
 import android.app.Application;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -43,19 +46,6 @@ public class MainApplication extends Application implements ReactApplication {
           return packages;
         }
 
-
-
-        // added manually
-        // @Override
-        // protected List<ReactPackage> getPackages() {
-        //   @SuppressWarnings("UnnecessaryLocalVariable")
-        //   List<ReactPackage> packages = new PackageList(this).getPackages();
-          
-          // packages.add(new ARTPackage());
-
-        //   return packages;
-        // }
-
         @Override
         protected String getJSMainModuleName() {
           return "index";
@@ -71,29 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
           return BuildConfig.IS_HERMES_ENABLED;
         }
       };
-
-   // added manually
-    //  @Override
-    //   protected List<ReactPackage> getPackages() {
-    //     @SuppressWarnings("UnnecessaryLocalVariable")
-    //     List<ReactPackage> packages = new PackageList(this).getPackages();
-
-    //     packages.add(new ARTPackage());
-
-    //     return packages;
-    //   }
-
-      //addede additional package
-      // @Override
-      // protected List<ReactPackage> getPackages() {
-      //     return Arrays.asList(
-      //             new MainReactPackage(),
-      //             new RNLocationPackage()
-      //     );
-      // }
-    
- 
-
+      
   @Override
   public ReactNativeHost getReactNativeHost() {
     return mReactNativeHost;

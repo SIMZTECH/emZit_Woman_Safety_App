@@ -3,6 +3,9 @@ package com.app;
 // added manually
 import android.os.Bundle;
 
+// added this manually for making phone calls
+import com.github.wumke.RNImmediatePhoneCall.RNImmediatePhoneCallPackage;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
@@ -19,6 +22,13 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "App";
+  }
+
+  // added this manually for making phone calls
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    RNImmediatePhoneCallPackage.onRequestPermissionsResult(requestCode, permissions, grantResults); // very important                                                                                              // event callback
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   // ...added manually

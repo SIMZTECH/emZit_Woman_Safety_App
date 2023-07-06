@@ -170,6 +170,9 @@ dependencies {
     // added manually
    implementation project(':react-native-art')
 
+    //    added manually for making a phone call
+    implementation project(':react-native-immediate-phone-call')
+
 
     //    added manually for contacts
     // implementation project(':react-native-contacts')
