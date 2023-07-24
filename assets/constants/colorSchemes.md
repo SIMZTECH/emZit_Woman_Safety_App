@@ -7,7 +7,7 @@
 - #f00100 //button center border color
 - #eff2fa //background color
 - #c3c6d3 //text color
-- 
+- #3c5a7d //text color
 
 #Contacts Page Colors
 - #82b296 //label

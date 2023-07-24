@@ -1,22 +1,32 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable prettier/prettier */
 /* eslint-disable jsx-quotes */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
-import { StyleSheet, Text, View,Dimensions, Image } from 'react-native';
-import React, { useLayoutEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Text, View,Dimensions, Image, ScrollView } from 'react-native';
+import React, { useContext, useLayoutEffect } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProfileDataRow from './ProfileDataRow';
 import AlergiesRow from './AlergiesRow';
 import {friend} from '../../../assets/imgaes/UIDesign/OtherImages';
 import Pie from 'react-native-pie';
+import { AppContext } from '../../../global/GlobalState';
+import { ProfileModel } from '../../database/Model';
+
+type propsContext={
+  userProfile:ProfileModel[],
+}
 
 
 const Profile = () => {
   const {width,height} = Dimensions.get('screen');
+  const [profileData,seProfileData] = React.useState();
+  const {
+    userProfile
+  }: propsContext = useContext(AppContext);
 
   const Navigation = useNavigation();
   useLayoutEffect(()=>{
@@ -25,8 +35,13 @@ const Profile = () => {
     });
   });
 
+  const dateFormat=(_Object:ProfileModel[],_index:number)=>{
+    let value =_Object[0].dateOfBirth.split(" ");
+    return value[value.length-_index];
+  }
+
   return (
-    <SafeAreaView
+    <ScrollView
     className="bg-[#eff2fa] pt-8"
     style={[styles.SafeAreaViewContainer,{width:width,height:height}]}>
       {/* top section */}
@@ -36,7 +51,7 @@ const Profile = () => {
             <View className="w-8 h-8 bg-[#82b296] rounded-md" />
           </View>
           <View className="space-y-1">
-            <Text className="text-[16px]">{'Hello Monde'}</Text>
+            <Text className="text-[16px]">Hi, {userProfile[0].firstName.toUpperCase()}</Text>
             <Text className="text-[#f00100] font-medium">Complete Profile</Text>
           </View>
         </View>
@@ -51,56 +66,56 @@ const Profile = () => {
       </View>
 
       {/* bottom section */}
-      <View className="bg-white flex-1 relative mt-10"
-      style={[styles.absolutebox,{width:width}]}>
-        {/* top nice design */}
+      <View className="bg-white flex-1 relative mt-4"
+        style={[styles.absolutebox, { width: width }]}>
         <View className="relative h-10 items-center ">
           <View className="absolute w-28 h-6 bg-white items-center justify-center -top-3 rounded-xl">
             <Text className="w-10 bg-[#eff2fa] h-1 rounded-md -top-1" />
           </View>
         </View>
-        {/* second profile details */}
-        <View className="px-6 flex-row space-x-2">
-          <View className="space-y-2">
-            <Text className="text-[#c3c6d3] tex-[13px]">Profile data</Text>
-            <View className="items-center justify-center relative w-14 h-14">
-              <Pie
-                  radius={20}
-                  innerRadius={15}
-                  sections={[
-                    {
-                      percentage: 70,
-                      color: '#82b296',
-                    },
-                  ]}
-                  backgroundColor="#eff2fa"
-                />
-              
-              <Text className="text-[#f00100] absolute text-[12px] font-medium">70%</Text> 
 
+        <View className="px-5 pb-1">
+          <View className='b justify-between flex-row'>
+            <Text className="text-[#c3c6d3] tex-[15px]">Profile data</Text>
+            <View className="flex-row space-x-1">
+              <Text className="text-[#f00100] font-medium tex-[14px]">Edit</Text>
+              <MaterialCommunityIcons name="pencil" color={'#f00100'} size={20} />
             </View>
           </View>
-          <View className="items-center flex-1 ">
-            {/* profile pic */}
-            <View className="w-[70px] h-[70px] bg-slate-400 rounded-full -ml-6">
-              <Image source={friend}
-              className="w-full h-full"
-              resizeMode="contain"/>
+
+          <View className='b flex-row'>
+            <View className="items-center justify-center relative w-16 h-16">
+              <Pie
+                radius={20}
+                innerRadius={15}
+                sections={[
+                  {
+                    percentage: 80,
+                    color: '#82b296',
+                  },
+                ]}
+                backgroundColor="#eff2fa"
+              />
+              <Text className="text-[#f00100] absolute text-[13px] font-medium">80%</Text>
             </View>
-            <Text className="text-[24px] text-black font-medium mt-2 -ml-6">Monde Kambeu</Text>
-            <Text className="text-[14px] text-[#c3c6d3] -ml-6">14 January, 1998</Text>
-          </View>
-          <View className="flex-row space-x-1">
-            <Text className="text-[#f00100] font-medium">Edit</Text>
-            <MaterialCommunityIcons name="pencil" color={'#f00100'} size={20}/>
+            <View className="items-center flex-1 -ml-14">
+              <View className="w-[70px] h-[70px] rounded-full -ml-6">
+                <Image source={friend}
+                  className="w-full h-full"
+                  resizeMode="contain" />
+              </View>
+              <Text className="text-[20px] text-black font-medium mt-2 -ml-6">{userProfile[0].firstName.toUpperCase() + " " + userProfile[0].lastName.toUpperCase()}</Text>
+              <Text className="text-[16px] text-[#c3c6d3] -ml-6">{dateFormat(userProfile,6)+"" + dateFormat(userProfile,5)+" " + dateFormat(userProfile,4) + "," +dateFormat(userProfile,3)}</Text>
+            </View>
           </View>
         </View>
+
         {/* profile data section */}
-        <View className="px-5 mt-5">
+        <View className="px-5 mt-2">
           <View>
             <ProfileDataRow
-              valueLeft={28}
-              valueRight={'ORh'}
+              valueLeft={userProfile[0].userAge}
+              valueRight={`${userProfile[0].bloodGroup} Rh`}
               titleLeft={'Age'}
               titleRight={'Blood type'}
               iconNameLeft={'calendar'}
@@ -110,8 +125,8 @@ const Profile = () => {
             />
 
             <ProfileDataRow
-              valueLeft={185}
-              valueRight={85}
+              valueLeft={userProfile[0].height}
+              valueRight={userProfile[0].weight}
               titleLeft={'Height'}
               titleRight={'Weight'}
               iconNameLeft={'human-male-height'}
@@ -151,8 +166,10 @@ const Profile = () => {
             />
           </View>
         </View>
+
       </View>
-    </SafeAreaView>
+
+    </ScrollView>
   );
 };
 

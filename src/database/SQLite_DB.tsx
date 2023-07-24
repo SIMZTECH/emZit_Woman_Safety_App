@@ -9,10 +9,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import React,{useState} from 'react';
-import { openDatabase,enablePromise,SQLiteDatabase} from 'react-native-sqlite-storage';
+import { openDatabase,enablePromise,SQLiteDatabase, Transaction} from 'react-native-sqlite-storage';
 import { PermissionModel} from './Model';
 import { ContactsModelModified } from './Model';
 import { ToastAndroid } from 'react-native';
+import { UserProfile } from './Model';
+import { ProfileModel } from './Model';
 
 enablePromise(true);
 
@@ -31,6 +33,46 @@ export const creatContactsTable = async (table: string, query: string) => {
                         contactNumber VARCHAR(20),
                         contactPriority BOOLEAN,
                         createdAt TIMESTAMP CURRENT_TIMESTAMP
+                    )`,
+                [],
+                () => {
+                    console.log(`${table}` + ' ' + 'table created successfully');
+                },
+                (error) => {
+                    console.log(`${table}` + ' ' + 'failed to be created' + ' ' + error);
+                }
+            );
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+
+};
+
+
+
+// create Ptofile table table 
+export const creatUserProfileTable = async (table: string, query: string) => {
+    try {
+        (await db).transaction(tx => {
+            tx.executeSql(
+                `CREATE TABLE IF NOT EXISTS ${table}(
+                        userID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        firstName VARCHAR(20),
+                        lastName VARCHAR(20),
+                        emailAddress VARCHAR(20),
+                        phone1 VARCHAR(20),
+                        phone2 VARCHAR(20),
+                        dateOfBirth VARCHAR(20),
+                        homeAddress VARCHAR(20),
+                        userAge INTEGER,
+                        height VARCHAR(20),
+                        weight VARCHAR(20),
+                        bloodGroup VARCHAR(20),
+                        animals VARCHAR(20),
+                        fruits VARCHAR(20),
+                        regDate VARCHAR(20)
                     )`,
                 [],
                 () => {
@@ -164,6 +206,25 @@ export const SaveContactToDatabse=async(table:string,data:ContactsModelModified,
     
     };
 };
+           
+
+export const SaveUserProfile = async (table: string, data: UserProfile, query: string): Promise<Boolean> => {
+    
+    (await db).transaction(txt => {
+        txt.executeSql(
+            `INSERT INTO ${table}(firstName,lastName,emailAddress,phone1,phone2,dateOfBirth,homeAddress,userAge,height,weight,bloodGroup,animals,fruits,regDate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [data.main.firstSection.firstName,data.main.firstSection.lastName,data.main.firstSection.emailAddress,data.main.firstSection.phone1,data.main.firstSection.phone2,data.main.secondSection.dateOfBirth,data.main.secondSection.homeAddress,data.main.secondSection.userAge,data.other.height,data.other.weight,data.other.bloodGroup,data.other.animals,data.other.fruits,data.regDate],
+            (success) => {
+                console.log('profile created successfully');
+            },
+            (error) => {
+                console.log('error saving profile');
+            }
+        );
+    });
+
+    return true;
+};
 
 // retrieve data from databse
 export const GetContactsFromDatabse=async(table:string,query:string):Promise <ContactsModelModified[]>=>{
@@ -182,6 +243,32 @@ export const GetContactsFromDatabse=async(table:string,query:string):Promise <Co
 
         }else{
             console.log('failed to Retrieve Data Successfully');
+        }
+
+    } catch (error) {
+        
+    }
+
+    return Data;
+};
+
+// retrieve data from databse
+export const GetUserProfile=async(table:string,query:string):Promise <ProfileModel[]>=>{
+    const DB:SQLiteDatabase=await db;
+
+    let Data:ProfileModel[]=[];
+
+    try {
+        const results= await DB.executeSql(`SELECT * FROM ${table}`);
+        if(results.length>0){
+            results.forEach((value)=>{
+                for(let index=0; index<value.rows.length;index++){
+                    Data.push(value.rows.item(index));
+                }
+            });
+
+        }else{
+            console.log('failed to Retrieve user profile');
         }
 
     } catch (error) {
@@ -286,6 +373,7 @@ export const dropTable=async(table:string,query:string)=>{
 
 
 
+
 export default {
     creatContactsTable,
     DeleteContactFromDatabase,
@@ -298,5 +386,7 @@ export default {
     SavePermissionsToDatabse,
     GetPermissionsFromDatabse,
     RetrieveSinglePermissionFromDatabse,
+    creatUserProfileTable,
+    SaveUserProfile,
 };
 

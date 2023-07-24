@@ -24,8 +24,8 @@ import useBLE from '../../useBLe';
 import CardMenu from './CardMenu';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import CustomModal from './CustomModal';
-import {GetContactsFromDatabse} from '../../database/SQLite_DB';
-import { ContactsModelModified } from '../../database/Model';
+import {GetContactsFromDatabse, GetUserProfile} from '../../database/SQLite_DB';
+import { ContactsModelModified, UserProfile } from '../../database/Model';
 import Geolocation from 'react-native-geolocation-service';
 import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 
@@ -34,13 +34,16 @@ let SendSMS=NativeModules.DirectSms;
 
 type propType={
   remainingTime:any,
+}
 
+type propsType={
+  navigation:any,
 }
 
   const {width,height} = Dimensions.get('screen');
   LogBox.ignoreLogs(['new NativeEventEmitter']);
 
-  const App = ({navigation}) => {
+  const App = ({navigation}:propsType) => {
 
     const {getDeviceInfor}=useBLE();
     const [theme, setTheme]=React.useState(Appearance.getColorScheme);
@@ -56,12 +59,15 @@ type propType={
       messageData:String,
       priorityContacts:ContactsModelModified[],
       setPriorityContacts:any,
+      userProfile:UserProfile[],
+      setUserProfile:any
     }
 
     const {
           isDeviceConnected,
           messageData,
           renderKey,setRenderKey,
+          userProfile,setUserProfile
     }:propsContext = useContext(AppContext);
 
     const Navigation = useNavigation();
@@ -158,6 +164,17 @@ type propType={
       }
     }, [renderKey]);
 
+    const HandleRetrieveUserProfileFromDB = useMemo(()=>{
+      GetUserProfile("profile", "")
+      .then((_data)=>{
+        setUserProfile(_data);
+      })
+      .catch((_error)=>{
+
+      });
+
+    },[setUserProfile]);
+
     const HandleOnPressedModalEvent = ((args: any) => {
       if (args === 'isVisibleStatus') {
         setModalVisible(false);
@@ -181,6 +198,8 @@ type propType={
     };
 
     useEffect(() => {
+      // prevent going back
+      Navigation.canGoBack();
 
       getDeviceInfor();
 
@@ -188,7 +207,7 @@ type propType={
         setTheme(scheme.colorScheme);
       });
 
-    }, [allPriority, getDeviceInfor, messageData, renderKey]);
+    }, [Navigation, allPriority, getDeviceInfor, messageData, renderKey]);
 
     console.log(allPriority);
     console.log("modal status:"+isModalVisible);
@@ -199,8 +218,7 @@ type propType={
         className={`relative flex-1 ${(theme === 'dark') ? 'bg-black' : 'bg-[#eff2fa]'} `}
         style={[styles.SafeAreaViewContainer, { width: width, height: height }]}>
 
-        <View className="px-8 pt-3 pb-2 flex-row justify-between bg-white shadow-md">
-
+        <View className="px-8 pt-4 pb-2 flex-row justify-between bg-white shadow-md">
           <View className="flex-row items-center justify-center space-x-2 flex-1">
             <Animatable.View animation={'pulse'} iterationCount={'infinite'}  easing={'ease-in'}>
               <FontAwesome5 name='heartbeat' size={24} color={'#ff6c6c'} />
@@ -208,13 +226,12 @@ type propType={
             <Text className="text-[20px] text-[#c3c6d3]">Emergency<Text className="text-[#f00100] font-bold">App</Text></Text>
           </View>
 
-          <View className="w-10 h-10 bg-blue-400 border-[2px] border-[#f00100] rounded-full overflow-hidden">
+          <View className="w-10 h-10 border-[2px] border-[#f00100] rounded-full overflow-hidden">
             <Image source={friend} className="object-contain h-full w-full"/>
           </View>
-
         </View>
 
-        <View className="items-center pt-3 relative flex-1">
+        <View className="items-center pt-1 relative flex-1">
           <TouchableOpacity
             onPress={(() => ResetStatesCallingMechanism())}
             className='w-10 h-10 self-end mr-5 mb-2 rounded-full'>
@@ -248,9 +265,9 @@ type propType={
             }
           </View>
 
-          <Text className='b mb-4 bg-[#f00100] px-2 items-center rounded-sm text-white mt-2 font-medium shadow-md'>{messageData}</Text>
+          <Text className='b mb-4 bg-[#f00100] px-2 items-center rounded-sm text-white mt-1 font-medium shadow-md'>{messageData}</Text>
           <Text className="text-[20px] font-semibold text-black">Not sure what to do?</Text>
-          <Text className="text-[14px] text-[#b4b7c2] mt-2">Read the guide</Text>
+          <Text className="text-[14px] text-[#b4b7c2] mt-1">Read the guide</Text>
 
         </View>
 

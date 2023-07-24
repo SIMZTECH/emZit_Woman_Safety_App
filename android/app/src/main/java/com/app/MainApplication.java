@@ -9,6 +9,7 @@ import com.app.MySendSmsPackage;
 // added manually for making phone call
 import com.github.wumke.RNImmediatePhoneCall.RNImmediatePhoneCallPackage;
 
+
 import android.app.Application;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -36,12 +37,12 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
 
-          packages.add( 
-            new ARTPackage()
-            // new ReactNativeContacts()
-            );
+          packages.add( new ARTPackage() );
           
-          packages.add(new MySendSmsPackage());
+          packages.add( new MySendSmsPackage() );
+
+          // for making calls
+          // packages.add( new RNImmediatePhoneCallPackage() );
 
           return packages;
         }

@@ -27,8 +27,9 @@ public class MainActivity extends ReactActivity {
   // added this manually for making phone calls
   @Override
   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-    RNImmediatePhoneCallPackage.onRequestPermissionsResult(requestCode, permissions, grantResults); // very important                                                                                              // event callback
+    RNImmediatePhoneCallPackage.onRequestPermissionsResult(requestCode, permissions, grantResults); // very important event callback
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
   }
 
   // ...added manually

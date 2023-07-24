@@ -7,3 +7,7 @@
 
 
 "react-native-reanimated": "^2.17.0",
+
+npm link react-native-immediate-phone-call
+
+react-native-immediate-phone-call

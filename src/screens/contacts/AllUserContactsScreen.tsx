@@ -64,7 +64,7 @@ const AllUserContactsScreen = ({navigation}:propsType) => {
 
   // console.log("data\t"+JSON.stringify(allUserContacts));
   return (
-    <View className={`flex-1 pt-4 ${(theme === 'dark') ? 'bg-black' :'bg-white'} pb-8`}>
+    <View className={`flex-1 pt-4 ${(theme === 'dark') ? 'bg-black' :'bg-white'}`}>
 
       <View className="b px-3 mt-3 ">
 

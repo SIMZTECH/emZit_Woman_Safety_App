@@ -164,18 +164,12 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    //added manually to handle location
-    // implementation project(':react-native-location')
 
     // added manually
-   implementation project(':react-native-art')
+//    implementation project(':react-native-art')
 
-    //    added manually for making a phone call
+    // added manually for making a phone call
     implementation project(':react-native-immediate-phone-call')
-
-
-    //    added manually for contacts
-    // implementation project(':react-native-contacts')
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 

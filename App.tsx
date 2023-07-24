@@ -6,13 +6,13 @@
 import React, { useCallback, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import 'react-native-gesture-handler';
-import { creatContactsTable, dropTable,creatPermissionTable} from './src/database/SQLite_DB';
+import { creatContactsTable,creatUserProfileTable, dropTable} from './src/database/SQLite_DB';
 import { GlobalStateProvider,AppContext } from './global/GlobalState';
 import MainRouteNavigation from './src/navigations/MainRouteNavigation';
 import { enableScreens } from 'react-native-screens';
 import SplashScreen from 'react-native-splash-screen';
-import { Appearance } from 'react-native';
-import MakeCall from './src/screens/callTest/MakeCall';
+
+
 enableScreens(false);
 
 
@@ -22,6 +22,7 @@ const App = () => {
   const tableCreation = useCallback(() => {
 
     creatContactsTable('contacts', '');
+    creatUserProfileTable('profile','');
     // creatPermissionTable('permissions', '');
   }, []);
 
@@ -30,6 +31,7 @@ const App = () => {
     tableCreation();
     // dropTable('contacts','');
     // dropTable('permissions','');
+    // dropTable('profile','');
 
     setTimeout(() => {
       SplashScreen.hide();

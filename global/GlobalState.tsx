@@ -3,6 +3,7 @@ import React from 'react';
 import { Device } from 'react-native-ble-plx';
 import {Contact} from 'react-native-contacts';
 import { ContactsModelModified } from '../src/database/Model';
+import { ProfileModel } from '../src/database/Model';
 
 type contextStates={
   isDeviceConnected:Boolean,
@@ -43,6 +44,7 @@ export const GlobalStateProvider=({children})=>{
     const [currentRoute,setCurrentRoute] = React.useState<string>('');
     const [priorityContacts,setPriorityContacts] = React.useState<ContactsModelModified[]>([]);
     const [allUserContacts,setAllUserContacts]=React.useState<Contact[]>([]);
+    const [userProfile,setUserProfile]=React.useState<ProfileModel[]>([]);
     const [renderKey,setRenderKey]=React.useState<number>(0);
 
   return (
@@ -64,7 +66,8 @@ export const GlobalStateProvider=({children})=>{
         currentRoute,setCurrentRoute,
         priorityContacts,setPriorityContacts,
         allUserContacts,setAllUserContacts,  
-        renderKey,setRenderKey
+        renderKey,setRenderKey,
+        userProfile,setUserProfile
     }}>
       {children}
     </AppContext.Provider>

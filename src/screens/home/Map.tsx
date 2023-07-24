@@ -10,8 +10,6 @@ import { AppContext } from '../../../global/GlobalState';
 import MapView, { Callout, Circle, LatLng, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { useNavigation } from '@react-navigation/native';
-import { GeolocationModel } from '../../database/Model';
-import Feather from 'react-native-vector-icons/Feather'
 import { GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapViewDirections from 'react-native-maps-directions';
 import { TouchableOpacity } from 'react-native-gesture-handler';

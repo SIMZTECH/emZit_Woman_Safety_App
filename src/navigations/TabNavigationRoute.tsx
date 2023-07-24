@@ -10,8 +10,10 @@ import SettingsScreen from '../screens/settings/SettingsScreen';
 import Home from '../screens/home/Home';
 import ContactScreenTopNavigation from './ContactScreenTopNavigation';
 import { useNavigation } from '@react-navigation/native';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
-const Tab = createBottomTabNavigator();
+// const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 
 const TabNavigationRoute = ({navigation}) => {
@@ -25,10 +27,16 @@ const TabNavigationRoute = ({navigation}) => {
     
   },);
 
-
   return (
     <>
-        <Tab.Navigator
+      <Tab.Navigator
+      barStyle={{
+        paddingVertical:0,
+        backgroundColor:"white",
+        paddingBottom:0,
+      }}
+      activeColor='#f00100'
+
       screenOptions={({route})=>({
         tabBarIcon:({focused,size,color})=>{
           let iconName;
@@ -41,10 +49,10 @@ const TabNavigationRoute = ({navigation}) => {
           }else if(route.name==='Settings'){
             iconName=focused?'md-settings' : 'md-settings';
           }
-          return <Ionicons name={`${iconName}`} size={size} color={color}/>
+          return <Ionicons name={`${iconName}`} size={25} color={"grey"}/>
         },
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
+        // tabBarActiveTintColor: 'tomato',
+        // tabBarInactiveTintColor: 'gray',
       })}
       >
             <Tab.Screen name='Home' component={Home}/>

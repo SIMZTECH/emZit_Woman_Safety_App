@@ -1,13 +1,4 @@
 /* eslint-disable prettier/prettier */
-// export type ContactsModel = {
-//     rowID:number,
-//     contactID:number,
-//     contactName:string,
-//     contactNumber:string,
-//     contactPriority:boolean,
-//     createdAt:string,
-// };
-
 export type ContactsModelModified = {
     rowID:number,
     recordID:String,
@@ -35,3 +26,56 @@ export type GeolocationModel={
     isFromMockProvider:boolean,
     timestamp:number
 };
+
+export type ProfileModel = {
+    userID:number,
+    firstName:String,
+    lastName:String,
+    emailAddress:String,
+    phone1:String,
+    phone2:String,
+    dateOfBirth:String,
+    homeAddress:String,
+    userAge:number,
+    height:String,
+    weight:String,
+    bloodGroup:String,
+    animals:String,
+    fruits:String,
+    regDate:String
+};
+
+export type userMainDetals = {
+    firstName: String,
+    lastName: String,
+    emailAddress: String,
+    phone1: String,
+    phone2: String,
+}
+
+export type otherDetails = {
+    dateOfBirth:String,
+    homeAddress:String,
+    userAge:number;
+}
+
+export type combinedUserProfileDetails = {
+    firstSection: userMainDetals,
+    secondSection: otherDetails,
+}
+
+export type completeFullUserOtherDetails = {
+    height: String,
+    weight: String,
+    bloodGroup: String,
+    animals:String,
+    fruits: String,
+}
+
+// user details
+export type UserProfile={
+    main:combinedUserProfileDetails,
+    other:completeFullUserOtherDetails,
+    regDate:String,
+}
+
